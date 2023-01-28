@@ -18,7 +18,11 @@ workflow {
     // get input raw data directory (from cli)
     // --rawdata /path/to/rawdata
     ch_rawdata = Channel.fromPath(params.rawdata)
-    PREPARE_JOB_DIR(ch_rawdata)
+    PREPARE_JOB_DIR(ch_rawdata) 
+    PARSE_METADATA(PREPARE_JOB_DIR.out.JOB_IDs)
+    CALL_DEMULTIPLEX(PARSE_METADATA.out.samplesheets)
+    CALL_PIPELINE(PARSE_METADATA.out.metadata)
+    
 }
 
 // take raw data path and return a list of job ids
@@ -87,36 +91,7 @@ process PARSE_METADATA {
     # and a list of samplesheets
     metadata = {}
     samplesheets = []
-    for JOB_ID in JOB_IDs:
-        metadata[JOB_ID] = {}
-        samplesheets.append(f"${params.project_root}/\${JOB_ID}/samplesheet.csv")
-    # parse the samplesheet
-    for line in my_csv:
-        # split the line into a list
-        line = line.split(",")
-        # get the job id
-        JOB_ID = line[0]
-        # get the metadata
-        metadata[JOB_ID]["run_id"] = line[1]
-        metadata[JOB_ID]["flowcell_id"] = line[2]
-        metadata[JOB_ID]["sequencer"] = line[3]
-        metadata[JOB_ID]["run_date"] = line[4]
-        metadata[JOB_ID]["run_type"] = line[5]
-        metadata[JOB_ID]["read_length"] = line[6]
-        metadata[JOB_ID]["read_type"] = line[7]
-        metadata[JOB_ID]["chemistry"] = line[8]
-        metadata[JOB_ID]["adapter"] = line[9]
-        metadata[JOB_ID]["adapter2"] = line[10]
-        metadata[JOB_ID]["index_type"] = line[11]
-        metadata[JOB_ID]["index_length"] = line[12]
-        metadata[JOB_ID]["index2_length"] = line[13]
-        metadata[JOB_ID]["index_read"] = line[14]
-        metadata[JOB_ID]["index2_read"] = line[15]
-        metadata[JOB_ID]["sample_id"] = line[16]
-        metadata[JOB_ID]["sample_name"] = line[17]
-        metadata[JOB_ID]["sample_plate"] = line[18]
-        metadata[JOB_ID]["sample_well"] = line[19]
-        metadata[
+    # PLACEHOLDER
     """
 }
 
