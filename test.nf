@@ -3,43 +3,25 @@ nextflow.enable.dsl = 2
 
 // params
 params.proj_root = "$HOME/TEST"
+params.Project_IDs = "wrong1,wrong2,wrong3"
+params.raw = "$HOME/TEST/"
 
 workflow {
-    // specified at command line
-    ch_in = Channel.fromPath(params.raw)
-    TEST(ch_in)
-    TEST2(TEST.out)
+    // get project IDs
+    proj_ids = Channel.from(params.Project_IDs.split(','))
+    // make project directories and symlink raw data
+    SETUP(proj_ids)
 }
 
-process TEST {
-    publishDir "${params.proj_root}/", mode: 'move'
-
+process SETUP {
+    publishDir "${params.proj_root}", mode: 'move'
     input:
-    path(dir)
-
+    val proj_id
     output:
-    path('done.txt')
-
+    path "${proj_id}"
     script:
     """
-    echo {1..10}'\n' > done.txt
-    """
-}
-
-process TEST2 {
-    publishDir "${params.proj_root}/", mode: 'move'
-
-    input:
-    path("done.txt")
-
-    output:
-    path('*.txt')
-
-    script:
-    """
-   while read line; do
-       touch \${line}.txt
-    done < done.txt
-        
+    mkdir -p ${proj_id}
+    ln -s ${params.raw}/${proj_id} ${proj_id}/raw
     """
 }

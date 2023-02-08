@@ -1,3 +1,5 @@
 .nextflow/
 .nextflow.*
 work/
+*.html*
+*.html

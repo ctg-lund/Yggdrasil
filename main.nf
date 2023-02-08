@@ -10,68 +10,67 @@ nextflow.enable.dsl = 2
 
 // Define parameters
 params.project_root = "/projects/fs1/shared/Test_Jobs"
-// just set these three from the cli
-params.input_csv = "${rawdata}/samplesheet.csv"
-params.rawdata = "set this from cli"
-params.jobid = "set this from cli"
+params.nfcore_demultiplex = "/projects/fs1/shared/pipelines/nf-core/demultiplex"
+params.rawdata = "/projects/fs1/shared/Test_Data/TEST"
+params.projectids = "comma,separated,list,in,ctg,config"
+params.samplesheets = "comma,separated,list,in,ctg,config"
+params.pipeline = 'example1,example2,example3'
+params.pipeline_root = "/projects/fs1/shared/pipelines/"
+
 
 // Define workflow
 workflow {
     // get input raw data directory (from cli)
     // --rawdata /path/to/rawdata
-    ch_rawdata = Channel.fromPath(params.rawdata)
-    PREPARE_JOB_DIR(ch_rawdata) 
-    CALL_DEMULTIPLEX(PARSE_METADATA)
-    CALL_PIPELINE(PARSE_METADATA)
-    DELIVER_OUTPUTS()
+    ch_project_dir = Channel.from(params.projectids.split(','))
+    ch_samplesheet = Channel.from(params.samplesheets.split(','))
+    PREPARE_JOB_DIR(ch_project_dir)
+    // need to create a channel with rawdata path and samplesheets
+    DEMULTIPLEX(PREPARE_JOB_DIR.out, ch_samplesheet)
+    PROCESS(DEMULTIPLEX.out)
+    
 }
 
-// take raw data path and return a list of job ids
-// also create a directory for each job id
-// going forward, there will be 1 samplesheet per project
-// the samplesheet will be named CTG...SampleSheet.csv
-// it is OK to add project id to the file name
-// but the file name will never be parsed in our pipelines
-// all metadata for a project will be in the CTG_SampleSheet.csv
+
 process PREPARE_JOB_DIR {
-    // publish job ids to project root
-    publishDir "${params.proj_root}/", mode: 'move'
-    // input
+    publishDir "${params.project_root}/", mode: 'move'
     input:
-    path(rawdata)
-    // output a job directory
+    val projectid
     output:
-    path(jobid/input_csv)
-
-    // script
+    path "${projectid}"
     script:
     """
-    # job id will be specified in the samplesheet
-    mkdir -p ${jobid}
-    # symlink raw data to job directory
-    ln -s ${rawdata} ${jobid}/raw
-    # copy the samplesheet to the job directory
-    cp ${params.input_csv} ${jobid}/
+    mkdir -p ${projectid}
+    ln -s ${params.rawdata} ${projectid}/raw
     """
 }
 
-// next call the demux with samplesheet as samplesheet
-// and raw data as run folder
-process CALL_DEMULTIPLEX {
-    // input
+process DEMULTIPLEX {
+    publishDir "${params.project_root}/", mode: 'move'
     input:
-    path(samplesheet)
-    // output
+    path projectid
+    val samplesheet
     output:
-    path("demux")
-
-    // script
+    path "${projectid}"
     script:
     """
-    # call the demultiplex pipeline
-    nextflow run nf-core/demultiplex \\
-        --input ${samplesheet} \\
-        --outdir demux \\
-        --runfolder ${params.rawdata}
+    nextflow run ${params.nfcore_demultiplex} \
+    --input ${params.rawdata}/${samplesheet} \
+    --outdir 0_demux -profile singularity
+    """
+}
+
+process PROCESS {
+    // dummy
+    publishDir "${params.project_root}/", mode: 'move'
+    input:
+    path projectid
+    output:
+    path "${projectid}/1_process"
+    script:
+    """
+    echo "nextflow run ${params.pipeline_root}/${params.pipeline} \
+    --input ${projectid}/0_demux \
+    --outdir 1_process -profile singularity" > ${projectid}/1_process/nf_run.txt
     """
 }

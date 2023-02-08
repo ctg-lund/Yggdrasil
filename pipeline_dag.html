@@ -105,15 +105,13 @@
 
 elements: {
 nodes: [
-{ data: { id: 'p0', label: 'Channel.fromPath'}, classes: 'ORIGIN' },
-{ data: { id: 'p1', label: 'TEST'}, classes: 'PROCESS' },
-{ data: { id: 'p2', label: 'TEST2'}, classes: 'PROCESS' },
-{ data: { id: 'p3'}, classes: 'NODE' },
+{ data: { id: 'p0', label: 'Channel.from'}, classes: 'ORIGIN' },
+{ data: { id: 'p1', label: 'SETUP'}, classes: 'PROCESS' },
+{ data: { id: 'p2'}, classes: 'NODE' },
 ],
 edges: [
-{ data: { source: 'p0', target: 'p1', label: 'ch_in' } },
+{ data: { source: 'p0', target: 'p1', label: 'proj_ids' } },
 { data: { source: 'p1', target: 'p2'} },
-{ data: { source: 'p2', target: 'p3'} },
 ],
 },
 
