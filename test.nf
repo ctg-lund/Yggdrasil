@@ -7,7 +7,8 @@ params.proj_root = "$HOME/TEST"
 workflow {
     // specified at command line
     ch_in = Channel.fromPath(params.raw)
-    TEST(ch_in) | TEST2
+    TEST(ch_in)
+    TEST2(TEST.out)
 }
 
 process TEST {
