@@ -16,17 +16,22 @@ def get_project_ids(path):
     # the project id is found in ./ctg.config
     # it is a comma separated list
     conf = path / 'ctg.config'
-    with open(conf, 'r') as f:
-        for line in f:
-            if line.lstrip().startswith('params.projectids'):
-                return line.split('=')[1].strip().split(',')
+    try: 
+        with open(conf, 'r') as f:
+            for line in f:
+                if line.lstrip().startswith('params.projectids'):
+                    return line.split('=')[1]\
+                            .strip().replace('\'','').split(',')
+    except:
+        # do nothing if the file does not exist and return None
+        pass
 
 def setup_output_structure(output_root, path, project_ids):
     # we need to set up the output structure
     # this is done by creating a folder for each project id
     # and symlinking the raw data there
     # the output structure is:
-    # /projects/fs1/Test_Jobs/<project_id>/<results>
+    # /projects/fs1/shared/Test_Jobs/<project_id>/<results>
     out_paths = []
     raw_data_paths = []
     for project_id in project_ids:
@@ -34,25 +39,29 @@ def setup_output_structure(output_root, path, project_ids):
         output_path.mkdir(parents=True, exist_ok=True)
         out_paths.append(output_path)
         # symlink the raw data directory
-        raw_data = output_path / path.stem
-        raw_data.symlink_to(path)
+        raw_data = output_path / 'raw' / path.stem
+        raw_data.parent.mkdir(parents=True, exist_ok=True)
+        if not raw_data.exists():
+            raw_data.symlink_to(path)
         raw_data_paths.append(raw_data)
         
     return out_paths, raw_data_paths
 
 def start_yggdrasil(out_path, raw_data_symlink):
     # placeholder command
-    cmd = shlex('nextflow run /projects/fs1/nas-sync/yggdrasil.nf' 
+    cmd = shlex.split('echo " nextflow run /projects/fs1/nas-sync/yggdrasil.nf' 
     '-c /projects/fs1/nas-sync/yggdrasil.config -profile slurm' 
-    f'--projectid {out_path.name} --raw_data {raw_data_symlink}')
-    subprocess.run(cmd, shell=True)
+    f'--projectid {out_path.name} --raw_data {raw_data_symlink} "'
+    f' > {out_path}/log.txt')
+    #print(cmd)
+    print(subprocess.run(cmd, capture_output=True))
     
 
 
 if __name__ == '__main__':
     # for the sake of multiprocessing
     upload_dir = Path('/projects/fs1/nas-sync/upload')
-    output_root = Path('/projects/fs1/Test_Jobs')
+    output_root = Path('/projects/fs1/shared/Test_Jobs')
 
     #set script umask to 0002
     os.umask(0o0002)
@@ -65,3 +74,12 @@ if __name__ == '__main__':
         if not (p.parent / 'yggdrasil.cron.start').exists():
             ready_for_processing.append(p.parent)
     
+    for p in ready_for_processing:
+        result = get_project_ids(p)
+        if result:    
+           out, raw = setup_output_structure(output_root=output_root, path=p, project_ids=result)
+                #start_yggdrasil(out,raw)
+           for o, r in zip(out,raw):
+                start_yggdrasil(o,r)
+           
+            

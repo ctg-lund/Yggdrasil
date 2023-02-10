@@ -1,3 +1,4 @@
+#!/usr/bin/env nextflow
 // Objective:
 // 1. receive a raw data directory path from cron job
 // 2. symlink rawdata to /shared/Jobs/JobID/raw
