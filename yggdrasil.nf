@@ -36,7 +36,7 @@ process GET_PARAMS {
     val pipeline
     shell:
     """ 
-   #!usr/bin/env python
+    #!usr/bin/env python
     import os
     import pathlib
     import re
@@ -48,11 +48,11 @@ process GET_PARAMS {
     samplesheet = list(raw.glob('CTG_*.csv'))[0]  
     # first open file
     with open(samplesheet, 'r') as f:
-       # read the samplesheet into string
-         ss = f.read()
+        # read the samplesheet into string
+        ss = f.read()
     # use regex to capture [BCLConvert_Data]()[*]
-   pattern = re.compile(r'.*BCLConvert_Data\]\n(.*?)\n\[', re.DOTALL)
-   data = pattern.findall(ss)[0]   
+    pattern = re.compile(r'.*BCLConvert_Data\]\n(.*?)\n\[', re.DOTALL)
+    data = pattern.findall(ss)[0]   
     # the data should be treated as csv 
     csv = csv.reader(data.splitlines(), delimiter=',')   
     # find the Sample_Project column and extract unique values
@@ -90,7 +90,7 @@ process BCLCONVERT {
 }
 
 process PUBLISH {
- publishDir "${params.project_root}", mode: 'move'  
+publishDir "${params.project_root}", mode: 'move'  
 
     input:
     val pid
