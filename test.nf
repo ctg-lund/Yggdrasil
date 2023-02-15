@@ -11,7 +11,9 @@ workflow {
     proj_ids = Channel.from(params.Project_IDs.split(','))
     // make project directories and symlink raw data
     SETUP(proj_ids) | CHECK 
-    PUBLISH(SETUP.out, CHECK.out)
+    PASS_FILE | READ_FILE
+    
+    PUBLISH(SETUP.out, CHECK.out, READ_FILE.out)
 }
 
 process SETUP {
@@ -41,10 +43,35 @@ process PUBLISH {
     input:
     path proj_id
     path raw
+    each test
     output:
     path proj_id
+    each {proj_id}/{test}
     script:
     """
     echo "publishing ${proj_id}"
+    """
+}
+
+process PASS_FILE {
+    output: 
+    path "*"
+    script:
+    """
+    #!/usr/bin/env python3
+    for i in range(10):
+        with open(f'{i}.txt', 'w') as f:
+            f.write("test")
+    """
+}
+
+process READ_FILE {
+    input:
+    each x
+    output:
+    path "$x.txt"
+    script:
+    """
+    echo $x > $x.txt
     """
 }

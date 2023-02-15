@@ -54,3 +54,20 @@ The stub functionality may be a good way to write tests
 for pipelines but is labelled experimental.
 
 Adding an official Illumina v2 Template csv file to the repo.
+
+So... Are we tracking info on lanes?
+The answer is --- maybe
+If this info is available it is in the Data section.
+I think the most reasonable way forward right now may be to just
+use the illumina v2 samplesheet.
+
+The way data is logged and absorbed in the lab right now
+means it is too heterogenous to deal with. Input needs to be
+formalized on the customer level and in the interface
+between BNF and Lab. Lacking a LIMS and being constrained
+with resources and time it would make most sense to expect
+the Lab to deal with the information from customers and
+pass along an Illumina samplesheet to bioinformaticians.
+
+A webapp to fill out the necessary values in the samplesheet
+already exists and can be deployed with some edits.

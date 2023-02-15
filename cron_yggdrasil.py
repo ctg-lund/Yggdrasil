@@ -15,11 +15,11 @@ import shlex
 def get_project_ids(path):
     # the project id is found in ./ctg.config
     # it is a comma separated list
-    conf = path / 'ctg.config'
+    conf = path.glob('*CTG_*.csv')
     try: 
         with open(conf, 'r') as f:
             for line in f:
-                if line.lstrip().startswith('projectids'):
+                if line.lstrip().startswith(''):
                     return line.split('=')[1]\
                             .strip().replace('\'','').split(',')
     except:
