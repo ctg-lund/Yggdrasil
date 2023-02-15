@@ -10,11 +10,11 @@ workflow {
     // get project IDs
     proj_ids = Channel.from(params.Project_IDs.split(','))
     // make project directories and symlink raw data
-    SETUP(proj_ids)
+    SETUP(proj_ids) | CHECK 
+    PUBLISH(SETUP.out, CHECK.out)
 }
 
 process SETUP {
-    publishDir "${params.proj_root}", mode: 'move'
     input:
     val proj_id
     output:
@@ -22,6 +22,29 @@ process SETUP {
     script:
     """
     mkdir -p ${proj_id}
-    ln -s ${params.raw}/${proj_id} ${proj_id}/raw
+    """
+}
+
+process CHECK {
+    input:
+    path proj_id
+    output:
+    path "${proj_id}/raw"
+    script:
+    """
+    touch ${proj_id}/raw
+    """
+}
+
+process PUBLISH {
+    publishDir "${params.proj_root}", mode: 'move'
+    input:
+    path proj_id
+    path raw
+    output:
+    path proj_id
+    script:
+    """
+    echo "publishing ${proj_id}"
     """
 }

@@ -19,7 +19,7 @@ def get_project_ids(path):
     try: 
         with open(conf, 'r') as f:
             for line in f:
-                if line.lstrip().startswith('params.projectids'):
+                if line.lstrip().startswith('projectids'):
                     return line.split('=')[1]\
                             .strip().replace('\'','').split(',')
     except:
@@ -32,8 +32,9 @@ def setup_output_structure(output_root, path, project_ids):
     # and symlinking the raw data there
     # the output structure is:
     # /projects/fs1/shared/Test_Jobs/<project_id>/<results>
+    # turning this to void function
     out_paths = []
-    raw_data_paths = []
+    
     for project_id in project_ids:
         output_path = output_root / project_id
         output_path.mkdir(parents=True, exist_ok=True)
@@ -43,18 +44,14 @@ def setup_output_structure(output_root, path, project_ids):
         raw_data.parent.mkdir(parents=True, exist_ok=True)
         if not raw_data.exists():
             raw_data.symlink_to(path)
-        raw_data_paths.append(raw_data)
         
-    return out_paths, raw_data_paths
 
-def start_yggdrasil(out_path, raw_data_symlink):
-    # placeholder command
-    cmd = shlex.split('echo " nextflow run /projects/fs1/nas-sync/yggdrasil.nf' 
-    '-c /projects/fs1/nas-sync/yggdrasil.config -profile slurm' 
-    f'--projectid {out_path.name} --raw_data {raw_data_symlink} "'
-    f' > {out_path}/log.txt')
-    #print(cmd)
-    print(subprocess.run(cmd, capture_output=True))
+def start_yggdrasil(project_list, raw_data):
+    # give raw data comma separated list of project ids
+    cmd = shlex.split('echo " nextflow run /projects/fs1/nas-sync/yggdrasil.nf'  
+       f'--projectids {project_list} "')
+    
+    subprocess.run(cmd, capture_output=True)
     
 
 
@@ -63,7 +60,7 @@ if __name__ == '__main__':
     upload_dir = Path('/projects/fs1/nas-sync/upload')
     output_root = Path('/projects/fs1/shared/Test_Jobs')
 
-    #set script umask to 0002
+    # set script umask to 0002
     os.umask(0o0002)
 
     # check if there are new files in the upload folder
@@ -77,9 +74,7 @@ if __name__ == '__main__':
     for p in ready_for_processing:
         result = get_project_ids(p)
         if result:    
-           out, raw = setup_output_structure(output_root=output_root, path=p, project_ids=result)
-                #start_yggdrasil(out,raw)
-           for o, r in zip(out,raw):
-                start_yggdrasil(o,r)
-           
+            setup_output_structure(output_root=output_root, path=p, project_ids=result)
+            #start_yggdrasil(project_list=result, raw_data=p)
+            start_yggdrasil(project_list=result, raw_data=p)
             
