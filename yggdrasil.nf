@@ -109,7 +109,7 @@ process GENERATE_SAMPLESHEET {
     """
 }
 
-process BCLCONVERT {
+process DEMULTIPLEX {
     input:
     path demux_samplesheet
     output:
