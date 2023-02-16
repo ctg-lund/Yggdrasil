@@ -21,6 +21,7 @@ Lane,Sample_ID,index,index2
 ,,,
 [Yggdrasil_Settings],,,
 Pipeline,SeqOnly,,
+FlowCellSerialBarcode,ABCD1234,,
 ,,,
 [Yggdrasil_Data],,,
 Sample_ID,,,

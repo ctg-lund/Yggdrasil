@@ -71,8 +71,8 @@ process GET_PARAMS {
     # to RunParameters.xml
     with open(raw / 'RunParameters.xml', 'r') as f:
         rp = f.read()
-    # use regex to capture <Flowcell>(.*)</Flowcell>
-    pattern = re.compile(r'.*<Flowcell>(.*)</Flowcell>.*', re.DOTALL)
+    # use regex to capture <FlowcellSerialBarcode>(.*)</FlowCellSerialBarcode>
+    pattern = re.compile(r'.*<FlowCellSerialBarcode>(.*)</FlowCellSerialBarcode>.*', re.DOTALL)
     flowcell = pattern.findall(rp)[0]
     # write to file
     with open('flowcell.txt', 'w') as f:
