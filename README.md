@@ -1,7 +1,7 @@
 # Yggdrasil
 
 ### one pipeline to rule them all
-![alt text for screen readers](yggdrasil_logo.png "Text to show on mouseover")
+![Suck it](ygg_logo.png "Best icon ever")
 ## Objective summary
 
 ### Initialization
