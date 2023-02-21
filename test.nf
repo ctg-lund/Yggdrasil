@@ -1,3 +1,4 @@
+#!/usr/bin/env nextflow
 // Enable DSL2 functionality
 nextflow.enable.dsl = 2
 
@@ -12,6 +13,7 @@ workflow {
     // make project directories and symlink raw data
     SETUP(proj_ids) | CHECK
     PASS_FILE | READ_FILE
+    TEMPLATE_TEST(SETUP.out)
     PUBLISH(SETUP.out)
 }
 
@@ -35,6 +37,15 @@ process CHECK {
     """
     touch ${proj_id}/raw
     """
+}
+
+process TEMPLATE_TEST {
+    input:
+    path proj_id
+    output:
+    path "${proj_id}/test.txt"
+    script:
+    template "test.py"
 }
 
 process PUBLISH {
