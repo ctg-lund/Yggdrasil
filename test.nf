@@ -46,7 +46,7 @@ process PUBLISH {
     each test
     output:
     path proj_id
-    each {proj_id}/{test}
+    each proj_id/"${test}"
     script:
     """
     echo "publishing ${proj_id}"
