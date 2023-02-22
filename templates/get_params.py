@@ -4,7 +4,7 @@ import re
 # get raw path from nextflow
 raw = pathlib.Path('${raw}')
 # grab the first one, shouldn't be more lying around
-samplesheet = list(raw.glob('CTG_*.csv'))[0]  
+samplesheet = next(raw.glob('CTG_*.csv'))
 
 # first open file
 with open(samplesheet, 'r') as f:
