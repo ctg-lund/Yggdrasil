@@ -64,7 +64,7 @@ publishDir "${params.project_root}", mode: 'move'
     path demux_out
     shell:
     """
-echo moving !{dir}
+echo moving !{demux_out}
     """ 
 }
     
