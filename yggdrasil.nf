@@ -23,7 +23,8 @@ workflow {
     // get projectid from cron python script
     // ch_projectids = Channel.from(params.projectids.split(','))  
     ch_raw = Channel.fromPath(params.rawdata)
-    GET_PARAMS(ch_raw) | DEMULTIPLEX
+    (ch_proj_id_file, ch_flowcell_file, ch_pipeline_file, ch_samplesheet) = GET_PARAMS(ch_raw) 
+    DEMULTIPLEX(ch_samplesheet)
     PUBLISH(DEMULTIPLEX.out)
 }
 
@@ -31,7 +32,6 @@ process GET_PARAMS {
     input:
     path raw    
     output:
-    path raw 
     path "projectids.txt"
     path "flowcell.txt"
     path "pipeline.txt"
@@ -40,25 +40,7 @@ process GET_PARAMS {
     template = "get_params.py"
 }
 
-process GENERATE_SAMPLESHEET {
-    input:
-    path raw
-    path projectids
-    path flowcell
-    path pipeline
-    path samplesheet
-    output:
-    path samplesheet
-    shell:
-    id = raw.name
-    """
-    # lane nr is optional!
-    # echo "id,samplesheet,lane,flowcell" > demux_samplesheet.csv
-    # echo "!{id},!{samplesheet},,!{raw}" >> demux_samplesheet.csv
-    # fuck nf core, we do it our way
 
-    """
-}
 
 // doing it this way produces output dirs by project id
 // meaning we get that info and separation of output
