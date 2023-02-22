@@ -43,8 +43,6 @@ process DEMULTIPLEX {
     path "*"
     shell:
     """
-singularity run --bind /projects/fs1 \
-!{params.bclconvert_singularity} \
 bcl-convert \
 --bcl-input-directory !{raw} \
 --output-directory . \
