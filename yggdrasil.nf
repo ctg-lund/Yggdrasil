@@ -10,7 +10,7 @@ nextflow.enable.dsl = 2
 
 // Define parameters
 params.project_root = "/projects/fs1/shared/Test_Jobs"
-params.pipeline_root = "/projects/fs1/shared/pipelines/"
+params.pipeline_root = "/projects/fs1/shared/"
 //params.nfcore_demultiplex = "/projects/fs1/shared/pipelines/Demux/nf-core-demultiplex-1.0.0/workflow/"
 params.rawdata = "/projects/fs1/shared/Test_Data/TEST"
 //params.projectids = "comma,separated,list,from,cron"
