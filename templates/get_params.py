@@ -3,14 +3,15 @@ import pathlib
 import re
 # get raw path from nextflow
 raw = pathlib.Path('${raw}')
+print(raw)
 # grab the first one, shouldn't be more lying around
 samplesheet = next(raw.glob('CTG_*.csv'))
-
+print(samplesheet)
 # first open file
 with open(samplesheet, 'r') as f:
     # read the samplesheet into string
     ss = f.read()
-
+print(ss)
 # use regex to capture [BCLConvert_Data]()[*]
 # the right way
 try:
