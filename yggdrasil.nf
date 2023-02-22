@@ -25,7 +25,7 @@ workflow {
     // ch_projectids = Channel.from(params.projectids.split(','))  
     ch_raw = Channel.fromPath(params.rawdata)
     (ch_proj_id_file, ch_flowcell_file, ch_pipeline_file, ch_samplesheet) = GET_PARAMS(ch_raw) 
-    DEMULTIPLEX(ch_samplesheet)
+    DEMULTIPLEX(ch_samplesheet, ch_raw)
     PUBLISH(DEMULTIPLEX.out)
 }
 
@@ -51,6 +51,7 @@ python !{params.templates}/get_params.py !{raw}
 process DEMULTIPLEX {
     input:
     path demux_samplesheet
+    path raw
     output:
     path "*"
     shell:
@@ -58,7 +59,7 @@ process DEMULTIPLEX {
 singularity run --bind /projects/fs1 \
 !{params.bclconvert_singularity} \
 bcl-convert \
---bcl-input-directory ${params.rawdata} \
+--bcl-input-directory !{raw} \
 --output-directory . \
 --force \
 --sample-sheet !{demux_samplesheet} \
