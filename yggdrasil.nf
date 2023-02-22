@@ -59,12 +59,12 @@ process PUBLISH {
 publishDir "${params.project_root}", mode: 'move'  
 
     input:
-    path pid
+    each dir
     output:
     path "*"
     shell:
     """
-echo moving shit
+echo moving !{dir}
     """ 
 }
     
