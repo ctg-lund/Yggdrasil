@@ -10,13 +10,13 @@ nextflow.enable.dsl = 2
 
 // Define parameters
 params.project_root = "/projects/fs1/shared/Test_Jobs"
-params.pipeline_root = "/projects/fs1/shared/"
-//params.nfcore_demultiplex = "/projects/fs1/shared/pipelines/Demux/nf-core-demultiplex-1.0.0/workflow/"
+params.pipeline_root = "/projects/fs1/shared/Test_Jobs"
+params.nfcore_demux = "${params.pipeline_root}/nf-core-demultiplex-1.1.0"
+params.singularity_images = "${params.nfcore_demux}/singularity-images"
+params.bclconvert_singularity = "${params.singularity_images}/nfcore-bclconvert-4.0.3.img"
+// FAKE PARAMS
 params.rawdata = "/projects/fs1/shared/Test_Data/TEST"
-//params.projectids = "comma,separated,list,from,cron"
-//params.samplesheets = "comma,separated,list,in,ctg,config"
-//params.pipeline = 'example1,example2,example3'
-//params.flowcell = "AAA000"
+
 
 // Define workflow
 workflow {
@@ -31,7 +31,7 @@ process GET_PARAMS {
     input:
     path raw    
     output:
-    path raw 
+    path ${raw} 
     path "projectids.txt"
     path "flowcell.txt"
     path "pipeline.txt"
@@ -48,17 +48,21 @@ process GENERATE_SAMPLESHEET {
     path pipeline
     path samplesheet
     output:
-    path "demux_samplesheet.csv"
+    path ${samplesheet}
     shell:
     id = raw.name
     """
     # lane nr is optional!
-    echo "id,samplesheet,lane,flowcell" > demux_samplesheet.csv
-    echo "!{id},!{samplesheet},,!{raw}" >> demux_samplesheet.csv
+    # echo "id,samplesheet,lane,flowcell" > demux_samplesheet.csv
+    # echo "!{id},!{samplesheet},,!{raw}" >> demux_samplesheet.csv
+    # fuck nf core, we do it our way
+
     """
 }
 
-//  --bcl-sampleproject-subdirectories true
+// doing it this way produces output dirs by project id
+// meaning we get that info and separation of output
+// for free
 process DEMULTIPLEX {
     input:
     path demux_samplesheet
@@ -66,11 +70,15 @@ process DEMULTIPLEX {
     path "*"
     shell:
     """
-    echo nextflow run !{params.pipeline_root}/nf-core-demultiplex-1.1.0/ \
-    --input !{demux_samplesheet} \
-    --outdir . \
-    --demultiplexer bclconvert \
-    --multiqc_methods_description >> demux.log 
+    singularity run --bind /projects/fs1 \
+    !{params.bclconvert_singularity} \
+    bcl-convert \
+    --bcl-input-directory !{params.raw}\
+    --output-directory . \
+    --force \
+    --sample-sheet !{demux_samplesheet} \
+    --bcl-sampleproject-subdirectories true \
+    --strict-mode true
     """
 }
 
