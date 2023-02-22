@@ -23,7 +23,7 @@ workflow {
     // get projectid from cron python script
     // ch_projectids = Channel.from(params.projectids.split(','))  
     ch_raw = Channel.fromPath(params.rawdata)
-    GET_PARAMS(ch_raw) | GENERATE_SAMPLESHEET | DEMULTIPLEX
+    GET_PARAMS(ch_raw) | DEMULTIPLEX
     PUBLISH(DEMULTIPLEX.out)
 }
 
@@ -86,14 +86,12 @@ process PUBLISH {
 publishDir "${params.project_root}", mode: 'move'  
 
     input:
-    val pid
-    path demux
+    path pid
     output:
-    path "${pid}/${demux}/*"
+    path "*"
     shell:
     """
-    mkdir -p !{pid} 
-    mv !{demux} !{pid}    
+    echo moving shit
     """ 
 }
     
