@@ -24,7 +24,7 @@ workflow {
     // ch_projectids = Channel.from(params.projectids.split(','))  
     ch_raw = Channel.fromPath(params.rawdata)
     GET_PARAMS(ch_raw) | GENERATE_SAMPLESHEET | DEMULTIPLEX
-    PUBLISH(ch_projectids, DEMULTIPLEX.out)
+    PUBLISH(DEMULTIPLEX.out)
 }
 
 process GET_PARAMS {
