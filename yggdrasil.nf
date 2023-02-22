@@ -31,7 +31,7 @@ process GET_PARAMS {
     input:
     path raw    
     output:
-    path ${raw} 
+    path raw 
     path "projectids.txt"
     path "flowcell.txt"
     path "pipeline.txt"
@@ -48,7 +48,7 @@ process GENERATE_SAMPLESHEET {
     path pipeline
     path samplesheet
     output:
-    path ${samplesheet}
+    path samplesheet
     shell:
     id = raw.name
     """
