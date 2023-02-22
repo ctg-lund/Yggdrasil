@@ -12,8 +12,16 @@ with open(samplesheet, 'r') as f:
     ss = f.read()
 
 # use regex to capture [BCLConvert_Data]()[*]
-pattern = re.compile(r'.*BCLConvert_Data\]\n(.*?)\n\[', re.DOTALL)
-data = pattern.findall(ss)[0]   
+# the right way
+try:
+    pattern = re.compile(r'.*\[BCLConvert_Data\](.*?)\[?', re.DOTALL)
+    data = pattern.findall(ss)[0]
+
+# or the wrong way
+except:
+    print('legacy mode')
+    pattern = re.compile(r'.*\[Data\](.*?)\[?', re.DOTALL)
+    data = pattern.findall(ss)[0]
 
 # find the Sample_Project column and extract unique values
 my_split = data.split('\n')
@@ -37,8 +45,8 @@ with open('projectids.txt', 'w') as f:
 with open(raw / 'RunParameters.xml', 'r') as f:
     rp = f.read()
 
-# use regex to capture <FlowcellSerialBarcode>(.*)</FlowCellSerialBarcode>
-pattern = re.compile(r'.*<FlowCellSerialBarcode>(.*)</FlowCellSerialBarcode>.*', re.DOTALL)
+#  use regex to capture <FlowCellSerialNumber>AACGHWHM5</
+pattern = re.compile(r'.*<FlowCellSerial\w+>(\w+)\<\/', re.DOTALL)
 flowcell = pattern.findall(rp)[0]
 
 # write to file
@@ -48,7 +56,7 @@ with open('flowcell.txt', 'w') as f:
 # find the pipeline to run
 # look for the pipeline name in the samplesheet
 # under [Yggdrasil_Settings]
-pattern = re.compile(r'.*Yggdrasil_Settings\]\n.*Pipeline,(\w),.*', re.DOTALL)
+pattern = re.compile(r'.*Yggdrasil_Settings\].*Pipeline,(\w+)', re.DOTALL)
 pipeline = pattern.findall(ss)[0]
 
 # write to file
