@@ -80,7 +80,7 @@ publishDir "${params.project_root}", mode: 'move'
     val pid
     path demux
     output:
-    path "{pid}/{demux}/*"
+    path "${pid}/${demux}/*"
     shell:
     """
     mkdir -p !{pid} 
