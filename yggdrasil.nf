@@ -39,7 +39,7 @@ process GET_PARAMS {
     path "SampleSheet.csv"
     shell:
     """
-    python !{params.templates}/get_params.py !{raw} 
+python !{params.templates}/get_params.py !{raw} 
     """ 
 }
 
@@ -55,15 +55,15 @@ process DEMULTIPLEX {
     path "*"
     shell:
     """
-    singularity run --bind /projects/fs1 \
-    !{params.bclconvert_singularity} \
-    bcl-convert \
-    --bcl-input-directory !{params.raw}\
-    --output-directory . \
-    --force \
-    --sample-sheet !{demux_samplesheet} \
-    --bcl-sampleproject-subdirectories true \
-    --strict-mode true
+singularity run --bind /projects/fs1 \
+!{params.bclconvert_singularity} \
+bcl-convert \
+--bcl-input-directory !{params.raw}\
+--output-directory . \
+--force \
+--sample-sheet !{demux_samplesheet} \
+--bcl-sampleproject-subdirectories true \
+--strict-mode true
     """
 }
 
@@ -76,7 +76,7 @@ publishDir "${params.project_root}", mode: 'move'
     path "*"
     shell:
     """
-    echo moving shit
+echo moving shit
     """ 
 }
     
