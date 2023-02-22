@@ -14,13 +14,13 @@ with open(samplesheet, 'r') as f:
 # use regex to capture [BCLConvert_Data]()[*]
 # the right way
 try:
-    pattern = re.compile(r'.*\[BCLConvert_Data\](.*?)\[?', re.DOTALL)
+    pattern = re.compile(r'\[BCLConvert_Data\],{0,}\n(.*)\]?', re.DOTALL)
     data = pattern.findall(ss)[0]
 
 # or the wrong way
 except:
     print('legacy mode')
-    pattern = re.compile(r'.*\[Data\](.*?)\[?', re.DOTALL)
+    pattern = re.compile(r'.*\[Data\],{0,}\n(.*)\]?', re.DOTALL)
     data = pattern.findall(ss)[0]
 
 # find the Sample_Project column and extract unique values
@@ -33,7 +33,11 @@ for i, item in enumerate(my_split[0].split(',')):
         col = i
 
 # make set with unique values in the column
-projectids = set([item.split(',')[col] for item in my_split[1:]])
+projectids = set()
+for item in my_split[1:]:
+    item = item.split(',')
+    if len(item) >= col:
+        projectids.add(item[col])
 
 # write to file
 with open('projectids.txt', 'w') as f:
