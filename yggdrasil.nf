@@ -14,6 +14,7 @@ params.pipeline_root = "/projects/fs1/shared/Test_Jobs"
 params.nfcore_demux = "${params.pipeline_root}/nf-core-demultiplex-1.1.0"
 params.singularity_images = "${params.nfcore_demux}/singularity-images"
 params.bclconvert_singularity = "${params.singularity_images}/nfcore-bclconvert-4.0.3.img"
+params.templates = "/projects/fs1/shared/Yggdrasil/templates"
 // FAKE PARAMS
 params.rawdata = "/projects/fs1/shared/Test_Data/TEST"
 
@@ -36,8 +37,10 @@ process GET_PARAMS {
     path "flowcell.txt"
     path "pipeline.txt"
     path "SampleSheet.csv"
-    script: 
-    template "get_params.py"
+    shell:
+    """
+    python !{params.templates}/get_params.py
+    """ 
 }
 
 
