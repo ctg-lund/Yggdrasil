@@ -64,7 +64,9 @@ bcl-convert \
 --force \
 --sample-sheet !{demux_samplesheet} \
 --bcl-sampleproject-subdirectories true \
---strict-mode true
+--strict-mode true \
+--bcl-only-matched-reads true \
+--bcl-num-parallel-tiles 16
     """
 }
 

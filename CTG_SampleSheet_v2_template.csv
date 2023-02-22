@@ -11,6 +11,8 @@ Index1Cycles,8,,
 Index2Cycles,8,,
 ,,,
 [BCLConvert_Settings],,,
+AdapterRead1,,,
+AdapterRead2,,, 
 ,,,
 [BCLConvert_Data],,,
 Lane,Sample_ID,index,index2
