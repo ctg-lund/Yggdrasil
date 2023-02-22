@@ -37,7 +37,7 @@ process GET_PARAMS {
     path "pipeline.txt"
     path "SampleSheet.csv"
     script: 
-    template = "get_params.py"
+    template "get_params.py"
 }
 
 
