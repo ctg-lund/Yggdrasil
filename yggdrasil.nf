@@ -58,18 +58,19 @@ process GENERATE_SAMPLESHEET {
     """
 }
 
+//  --bcl-sampleproject-subdirectories true
 process DEMULTIPLEX {
     input:
     path demux_samplesheet
     output:
-    path "0_demux/*"
+    path "*"
     shell:
     """
-    mkdir -p 0_demux
-    echo "nextflow run !{params.nfcore_demultiplex} \
---input !{demux_samplesheet} \
---outdir 0_demux -profile singularity \
---demultiplexer 'bclconvert'" > 0_demux/out.txt
+    echo nextflow run !{params.pipeline_root}/nf-core-demultiplex-1.1.0/ \
+    --input !{demux_samplesheet} \
+    --outdir . \
+    --demultiplexer bclconvert \
+    --multiqc_methods_description >> demux.log 
     """
 }
 
