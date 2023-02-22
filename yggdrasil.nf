@@ -58,7 +58,7 @@ process DEMULTIPLEX {
 singularity run --bind /projects/fs1 \
 !{params.bclconvert_singularity} \
 bcl-convert \
---bcl-input-directory !{params.raw}\
+--bcl-input-directory ${params.rawdata}\
 --output-directory . \
 --force \
 --sample-sheet !{demux_samplesheet} \
