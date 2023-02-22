@@ -39,7 +39,7 @@ process GET_PARAMS {
     path "SampleSheet.csv"
     shell:
     """
-    python !{params.templates}/get_params.py
+    python !{params.templates}/get_params.py !{raw} 
     """ 
 }
 

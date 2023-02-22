@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import pathlib
 import re
+import sys
 # get raw path from nextflow
-raw = pathlib.Path('${raw}')
+raw = pathlib.Path(f'{sys.argv[1]}')
 print(raw)
 # grab the first one, shouldn't be more lying around
 samplesheet = next(raw.glob('CTG_*.csv'))
