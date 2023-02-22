@@ -40,12 +40,12 @@ process DEMULTIPLEX {
     path demux_samplesheet
     path raw
     output:
-    path "bcl_out/"
+    path "2*_*"
     shell:
     """
 bcl-convert \
 --bcl-input-directory !{raw} \
---output-directory bcl_out \
+--output-directory . \
 --force \
 --sample-sheet !{demux_samplesheet} \
 --bcl-sampleproject-subdirectories true \
@@ -56,7 +56,7 @@ bcl-convert \
 }
 
 process PUBLISH {
-publishDir "${params.project_root}", mode: 'move'  
+publishDir "${params.project_root}", mode: 'copy'  
 
     input:
     path demux_out
