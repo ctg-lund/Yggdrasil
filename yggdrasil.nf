@@ -6,19 +6,6 @@
 nextflow.enable.dsl = 2
 
 
-
-
-// Define parameters
-params.project_root = "/projects/fs1/shared/Test_Jobs"
-params.pipeline_root = "/projects/fs1/shared/Test_Jobs"
-params.nfcore_demux = "${params.pipeline_root}/nf-core-demultiplex-1.1.0"
-params.singularity_images = "${params.nfcore_demux}/singularity-images"
-params.bclconvert_singularity = "${params.singularity_images}/nfcore-bclconvert-4.0.3.img"
-params.templates = "/projects/fs1/shared/Yggdrasil/templates"
-// FAKE PARAMS
-params.rawdata = "/projects/fs1/shared/Test_Data/TEST"
-
-
 // Define workflow
 workflow {
     // get projectid from cron python script
