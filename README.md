@@ -16,3 +16,4 @@
 2. Bclconvert demuxes and produces per project output
 ...
 
+We should probably forget about symlinking raw data, we are not planning to deliver the rawdata in the future!
