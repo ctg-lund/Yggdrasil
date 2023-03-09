@@ -4,6 +4,11 @@
 ![Suck it](logo_ygg.png "Best icon ever")
 ## Objective summary
 
+Important: the pipeline should always be developed with the fact in mind that there will be cases
+where we want to run it directly. Therefore it is both important to add and document command line
+arguments. After we have a complete version one for sequencing only we should start writing tests.
+As a rule of thumb, before we merge pull requests on main, we should perform these tests.
+
 ### Initialization
 
 * Yggdrasil is a workflow written in nextflow using DSL 2
@@ -17,3 +22,4 @@
 ...
 
 We should probably forget about symlinking raw data, we are not planning to deliver the rawdata in the future!
+
