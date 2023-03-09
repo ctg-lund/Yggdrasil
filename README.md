@@ -1,7 +1,7 @@
 # Yggdrasil
 
 ### one pipeline to rule them all
-![Suck it](ygg_logo.png "Best icon ever")
+![Suck it](logo_ygg.png "Best icon ever")
 ## Objective summary
 
 ### Initialization
