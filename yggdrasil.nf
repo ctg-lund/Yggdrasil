@@ -12,8 +12,9 @@ workflow {
     // ch_projectids = Channel.from(params.projectids.split(','))  
     ch_raw = Channel.fromPath(params.rawdata)
     (ch_proj_id_file, ch_flowcell_file, ch_pipeline_file, ch_samplesheet) = GET_PARAMS(ch_raw) 
-    DEMULTIPLEX(ch_samplesheet, ch_raw)
-    PUBLISH(DEMULTIPLEX.out)
+    project_dir_fq = DEMULTIPLEX(ch_samplesheet, ch_raw)
+    fastqs = MOVE_FASTQS(project_dir_fq)
+
 }
 
 process GET_PARAMS {
@@ -52,6 +53,29 @@ bcl-convert \
 --strict-mode true \
 --bcl-only-matched-reads true \
 --bcl-num-parallel-tiles 16
+    """
+}
+
+process MOVE_FASTQS {
+    input:
+    path old_dir
+    output:
+    path ${old_dir}/0_fastq
+    shell:
+    """
+    mkdir !{old_dir}/0_fastq
+    mv !{old_dir}/*.fastq.gz !{old_dir}/0_fastq/
+    """
+}
+
+process FASTP {
+    input:
+    path fastqs
+    output:
+    path "${fastqs}/1_fastqc"
+    script:
+    """
+    #TBD
     """
 }
 
