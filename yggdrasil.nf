@@ -9,37 +9,59 @@ nextflow.enable.dsl = 2
 // Define workflow
 workflow {
     // get projectid from cron python script
-    // ch_projectids = Channel.from(params.projectids.split(','))  
+    // ch_projectids = Channel.from(params.projectids.split(','))
+
     ch_raw = Channel.fromPath(params.rawdata)
-    (ch_proj_id_file, ch_flowcell_file, ch_pipeline_file, ch_samplesheet) = GET_PARAMS(ch_raw) 
-    project_dir_fq = DEMULTIPLEX(ch_samplesheet, ch_raw)
-    fastqs = MOVE_FASTQS(project_dir_fq)
+    GET_PARAMS (
+        ch_raw
+    )
+    INTEROP_QC (
+        ch_raw
+    )
+    DEMULTIPLEX(
+        GET_PARAMS.out.demux_samplesheet,
+        ch_raw
+    )
 
 }
 
 process GET_PARAMS {
     input:
-    path raw    
+    path(raw)
+
     output:
-    path "projectids.txt"
-    path "flowcell.txt"
-    path "pipeline.txt"
-    path "SampleSheet.csv"
+    path("projectids.txt"); emit: proj_ids
+    path("flowcell.txt"); emit: flowcell
+    path("pipeline.txt"); emit: pipeline
+    path("SampleSheet.csv"); emit: demux_samplesheet
+
     shell:
     """
-python !{params.templates}/get_params.py !{raw} 
+    get_params.py ${raw} 
     """ 
 }
 
+process INTEROP_QC {
+    input:
+    path(raw)
 
+    output:
+    path("interops_qc.html"); emit: interop_qc
+
+    shell:
+    """
+    #Interops qc script
+    """ 
+}
 
 // doing it this way produces output dirs by project id
 // meaning we get that info and separation of output
 // for free
 process DEMULTIPLEX {
     input:
-    path demux_samplesheet
-    path raw
+    path(demux_samplesheet)
+    path(raw)
+
     output:
     path "2*_*"
     shell:
