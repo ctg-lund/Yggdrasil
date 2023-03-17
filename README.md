@@ -1,7 +1,7 @@
 # Yggdrasil
 
 ### one pipeline to rule them all
-![Suck it](logo_ygg.png "Best icon ever")
+![Suck it](images/logo_ygg.png "Best icon ever")
 ## Objective summary
 
 Important: the pipeline should always be developed with the fact in mind that there will be cases
