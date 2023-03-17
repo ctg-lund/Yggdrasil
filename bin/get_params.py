@@ -22,7 +22,7 @@ try:
 # or the wrong way
 except:
     print('legacy mode')
-    pattern = re.compile(r'.*\[Data\],{0,}\n(.*)\]?', re.DOTALL)
+    pattern = re.compile(r'.*\[Data\],{0,}\n(.*)\[?', re.DOTALL)
     data = pattern.findall(ss)[0]
 
 # find the Sample_Project column and extract unique values
