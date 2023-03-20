@@ -11,7 +11,7 @@ process INTEROP_QC {
     """ 
     stub:
     """
-    mkdir -p interop/
-    touch interop/interops_qc.html
+    mkdir -p qc/interop
+    touch qc/interop/interops_qc.html
     """
 }
