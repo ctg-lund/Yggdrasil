@@ -10,6 +10,4 @@ workflow singleCell {
         samplesheet,
         runfolder
     )
-
-    
 }

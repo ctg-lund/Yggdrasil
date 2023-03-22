@@ -4,17 +4,18 @@ process BCLCONVERT {
     path(raw)
 
     output:
-    path "2*_*"
+    path("2*_*"), emit: demux_out
+
     shell:
     """
-bcl-convert \
---bcl-input-directory !{raw} \
---output-directory . \
---force \
---sample-sheet !{demux_samplesheet} \
---bcl-sampleproject-subdirectories true \
---strict-mode true \
---bcl-only-matched-reads true \
---bcl-num-parallel-tiles 16
+    bcl-convert \
+    --bcl-input-directory ${raw} \
+    --output-directory . \
+    --force \
+    --sample-sheet ${demux_samplesheet} \
+    --bcl-sampleproject-subdirectories true \
+    --strict-mode true \
+    --bcl-only-matched-reads true \
+    --bcl-num-parallel-tiles 16
     """
 }

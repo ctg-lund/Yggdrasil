@@ -12,41 +12,31 @@ workflow {
     // ch_projectids = Channel.from(params.projectids.split(','))
 
     ch_raw = Channel.fromPath(params.rawdata)
-    GET_PARAMS (
+/*    INTEROP_QC (
         ch_raw
     )
-    INTEROP_QC (
-        ch_raw
-    )
+*/
     DEMULTIPLEX(
         GET_PARAMS.out.demux_samplesheet,
         ch_raw
     )
+    MOVE_FASTQS(
+        DEMULTIPLEX.out
+    )
 
 }
 
-process GET_PARAMS {
-    input:
-    path(raw)
-
-    output:
-    path("projectids.txt"); emit: proj_ids
-    path("flowcell.txt"); emit: flowcell
-    path("pipeline.txt"); emit: pipeline
-    path("SampleSheet.csv"); emit: demux_samplesheet
-
-    shell:
-    """
-    get_params.py ${raw} 
-    """ 
-}
 
 process INTEROP_QC {
+
+    //The QC of the Illumina run will be processed through multiqc
+    // At the moment not part of the pipeline
+
     input:
     path(raw)
 
     output:
-    path("interops_qc.html"); emit: interop_qc
+    path("interops_qc.html"), emit: interop_qc
 
     shell:
     """
@@ -57,24 +47,27 @@ process INTEROP_QC {
 // doing it this way produces output dirs by project id
 // meaning we get that info and separation of output
 // for free
+// CTG_SampleSheet.csv
+
 process DEMULTIPLEX {
     input:
     path(demux_samplesheet)
     path(raw)
 
     output:
-    path "2*_*"
+    path("2*_*"), emit: demux_out
+
     shell:
     """
-bcl-convert \
---bcl-input-directory !{raw} \
---output-directory . \
---force \
---sample-sheet !{demux_samplesheet} \
---bcl-sampleproject-subdirectories true \
---strict-mode true \
---bcl-only-matched-reads true \
---bcl-num-parallel-tiles 16
+    bcl-convert \
+    --bcl-input-directory ${raw} \
+    --output-directory . \
+    --force \
+    --sample-sheet ${demux_samplesheet} \
+    --bcl-sampleproject-subdirectories true \
+    --strict-mode true \
+    --bcl-only-matched-reads true \
+    --bcl-num-parallel-tiles 16
     """
 }
 
