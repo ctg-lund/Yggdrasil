@@ -5,6 +5,13 @@
 // Enable DSL2 functionality
 nextflow.enable.dsl = 2
 
+// manual or automatic samplesheet
+if (params.samplesheet) {
+    ch_samplesheet = Channel.fromPath("${params.samplesheet}", checkIfExists: true)
+} else { ch_samplesheet = Channel.fromPath("${params.rawdata}/CTG_SampleSheet.csv", checkIfExists: true}
+
+
+
 
 // Define workflow
 workflow {
@@ -17,11 +24,17 @@ workflow {
     )
 */
     DEMULTIPLEX(
-        GET_PARAMS.out.demux_samplesheet,
+        ch_samplesheet,
         ch_raw
     )
-    MOVE_FASTQS(
-        DEMULTIPLEX.out
+    // the following channel formation needs to be tested
+    ch_projids = Channel.fromPath(DEMULTIPLEX.demux_out).flatten()
+    FASTQC(
+        ch_projids
+    )
+    PUBLISH(
+        DEMULTIPLEX.demux_out,
+        FASTQC.out
     )
 
 }
@@ -71,40 +84,8 @@ process DEMULTIPLEX {
     """
 }
 
-process MOVE_FASTQS {
-    input:
-    path old_dir
-    output:
-    path ${old_dir}/0_fastq
-    shell:
-    """
-    mkdir !{old_dir}/0_fastq
-    mv !{old_dir}/*.fastq.gz !{old_dir}/0_fastq/
-    """
-}
 
-process FASTP {
-    input:
-    path fastqs
-    output:
-    path "${fastqs}/1_fastqc"
-    script:
-    """
-    #TBD
-    """
-}
 
-process PUBLISH {
-publishDir "${params.project_root}", mode: 'copy'  
 
-    input:
-    path demux_out
-    output:
-    path demux_out
-    shell:
-    """
-echo moving !{demux_out}
-    """ 
-}
     
 
