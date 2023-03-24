@@ -1,7 +1,7 @@
 //  ${ncbi_annotation.baseName} to get the basename of the raw_data and then we could get the flowcell id from this bash variable
 
 process PUBLISH {
-publishDir "${params.project_root}", mode: 'copy'  
+publishDir "${params.publish_dir}", mode: 'copy'  
 
     input:
     path demux_out

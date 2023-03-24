@@ -1,3 +1,8 @@
+// doing it this way produces output dirs by project id
+// meaning we get that info and separation of output
+// for free
+// CTG_SampleSheet.csv
+
 process BCLCONVERT {
     input:
     path(demux_samplesheet)
