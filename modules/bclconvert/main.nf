@@ -10,6 +10,7 @@ process BCLCONVERT {
 
     output:
     path("2*_*"), emit: demux_out
+    
 
     shell:
     """
@@ -22,5 +23,11 @@ process BCLCONVERT {
     --strict-mode true \
     --bcl-only-matched-reads true \
     --bcl-num-parallel-tiles 16
+    """
+    stub:
+    """
+    mkdir -p 23_test
+    touch 23_test/test_R1.fastq.gz
+    touch 23_test/test_R2.fastq.gz
     """
 }

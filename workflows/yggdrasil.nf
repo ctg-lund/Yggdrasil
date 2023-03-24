@@ -19,12 +19,20 @@ if (params.outdir) {
     params.publish_dir = "${params.project_root}" 
 }
 
-// Including all modules
-include { INTEROP_QC } from '../modules/interop/main.nf'
-include { BCLCONVERT } from '../modules/bclconvert/main.nf'
-include { FASTQC } from '../modules/fastqc/main.nf'
-include { PUBLISH } from '../modules/publish/main.nf'
+if (params.dragen) {
+    dragen = true
+}
 
+// Including modules
+include { INTEROP_QC } from '../modules/interop/main'
+include { BCLCONVERT } from '../modules/bclconvert/main'
+include { FASTQC } from '../modules/fastqc/main'
+include { PUBLISH } from '../modules/publish/main'
+
+// Including subworkflows
+
+include { SINGLE_CELL                   } from '../subworkflows/singleCell'
+include { DRAGEN                   } from '../subworkflows/dragen'
 
 // Define workflow
 workflow {
@@ -47,6 +55,12 @@ workflow {
         ch_projids
     ).out.set {ch_all_proj}
     PUBLISH(
+        ch_raw,
         ch_all_proj
     )
+
+    //Example for DRAGEN
+    if (dragen) {
+        DRAGEN(ch_projids)
+    }
 }
