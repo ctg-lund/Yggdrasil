@@ -50,7 +50,7 @@ workflow {
     // the following channel formation needs to be tested
     ch_projids = Channel
         .fromPath(BCLCONVERT.demux_out, type: 'dir')
-        .map { [it.name, it ] }
+        .map { [it.name, it ] } // This creates tuple of name of the project directory and project demux path
     FASTQC(
         ch_projids
     ).out.set {ch_all_proj}
