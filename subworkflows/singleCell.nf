@@ -5,11 +5,9 @@ runfolder = params.runfolder
 
 include { MKFASTQ } from '../modules/mkfastq/main'
 
-workflow singleCell {
+workflow SINGLE_CELL {
     mkfastq_ch = MKFASTQ(
         samplesheet,
         runfolder
     )
-
-    
 }

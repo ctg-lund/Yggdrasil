@@ -1,16 +1,23 @@
 process FASTQC {
-
+	tag "${proj}"
+	
 	input:
-		path(demux_dir)
+		tuple val(proj), path(demux_dir)
+	
 	output:
-        path "qc*"
+		tuple val(proj), path(demux_dir)
+		path "qc*"
+	
 	shell:
 	"""
-    # Fastqc scripts
+    # Fastqc and multiqc together for each project scripts
 	"""
+	
 	stub:
 	"""
     mkdir -p qc/fastqc
-    touch qc/fastqc/sample_id.fastqc.html
+	mkdir -p qc/multiqc
+	touch qc/fastqc/sample_id.fastqc.html
+	touch qc/multiqc/all_samples.multiqc.html
 	"""
 }
