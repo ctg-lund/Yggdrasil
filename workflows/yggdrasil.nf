@@ -27,7 +27,8 @@ if (params.dragen) {
 include { INTEROP_QC } from '../modules/interop/main'
 include { BCLCONVERT } from '../modules/bclconvert/main'
 include { FASTQC } from '../modules/fastqc/main'
-include { PUBLISH } from '../modules/publish/main'
+include { MULTIQC } from '../modules/multiqc/main'
+include { PUBLISH_SEQ_QC } from '../modules/publish_seq_qc/main'
 
 // Including subworkflows
 
@@ -49,12 +50,15 @@ workflow {
     )
     // the following channel formation needs to be tested
     ch_projids = Channel
-        .fromPath(BCLCONVERT.demux_out, type: 'dir')
+        .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
         .map { [it.name, it ] } // This creates tuple of name of the project directory and project demux path
     FASTQC(
         ch_projids
+    )
+    MULTIQC(
+        FASTQC.out
     ).out.set {ch_all_proj}
-    PUBLISH(
+    PUBLISH_SEQ_QC(
         ch_raw,
         ch_all_proj
     )
