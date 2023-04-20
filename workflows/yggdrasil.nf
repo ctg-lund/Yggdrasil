@@ -41,9 +41,9 @@ workflow {
     // ch_projectids = Channel.from(params.projectids.split(','))
 
     ch_raw = Channel.fromPath(params.rawdata)
-    INTEROP_QC (
-        ch_raw
-    )
+    //INTEROP_QC (
+    //    ch_raw
+    //)
     BCLCONVERT(
         ch_samplesheet,
         ch_raw
