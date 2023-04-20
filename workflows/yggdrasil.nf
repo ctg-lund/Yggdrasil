@@ -36,7 +36,7 @@ include { SINGLE_CELL                   } from '../subworkflows/singleCell'
 include { DRAGEN                   } from '../subworkflows/dragen'
 
 // Define workflow
-workflow {
+workflow YGGDRASIL {
     // get projectid from cron python script
     // ch_projectids = Channel.from(params.projectids.split(','))
 
