@@ -48,6 +48,9 @@ workflow YGGDRASIL {
         ch_samplesheet,
         ch_raw
     )
+    ch_samplesheet.view()
+    ch_raw.view()
+    /*
     // the following channel formation needs to be tested
     ch_projids = Channel
         .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
@@ -55,7 +58,7 @@ workflow YGGDRASIL {
     FASTQC(
         ch_projids
     )
-    /*
+
     MULTIQC(
         FASTQC.out.collect()
     ).out.set {ch_all_proj}
