@@ -3,7 +3,7 @@ process INTEROP_QC {
     path(raw)
 
     output:
-    path("interops_qc.html"); emit: interop_qc
+    path("interops_qc.html"), emit: interop_qc
 
     shell:
     """
