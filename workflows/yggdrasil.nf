@@ -51,7 +51,7 @@ workflow YGGDRASIL {
     // the following channel formation needs to be tested
     ch_projids = Channel
         .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
-        .map { [it.name, it ] } // This creates tuple of name of the project directory and project demux path
+        .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
     FASTQC(
         ch_projids
     )
@@ -64,7 +64,7 @@ workflow YGGDRASIL {
     )
 
     //Example for DRAGEN
-    if (dragen) {
+    if ("${params.dragen}") {
         DRAGEN(ch_projids)
     }
 }
