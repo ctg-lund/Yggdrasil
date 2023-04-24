@@ -56,7 +56,7 @@ workflow YGGDRASIL {
         ch_projids
     )
     MULTIQC(
-        FASTQC.out
+        FASTQC.out.collect()
     ).out.set {ch_all_proj}
     PUBLISH_SEQ_QC(
         ch_raw,
