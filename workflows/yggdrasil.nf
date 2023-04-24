@@ -44,12 +44,12 @@ workflow YGGDRASIL {
     //INTEROP_QC (
     //    ch_raw
     //)
+    ch_samplesheet.view()
+    ch_raw.view()
     BCLCONVERT(
         ch_samplesheet,
         ch_raw
     )
-    ch_samplesheet.view()
-    ch_raw.view()
     /*
     // the following channel formation needs to be tested
     ch_projids = Channel
