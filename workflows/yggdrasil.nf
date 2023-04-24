@@ -55,6 +55,7 @@ workflow YGGDRASIL {
     FASTQC(
         ch_projids
     )
+    /*
     MULTIQC(
         FASTQC.out.collect()
     ).out.set {ch_all_proj}
