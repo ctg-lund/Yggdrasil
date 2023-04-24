@@ -18,10 +18,24 @@ nextflow.enable.dsl = 2
 include { YGGDRASIL } from './workflows/yggdrasil'
 
 //
-// WORKFLOW: Run main nf-core/ampliseq analysis pipeline
+// WORKFLOW: Run main ctg-lund/Yggdrasil pipeline
+//
+workflow CTG_YGGDRASIL {
+    YGGDRASIL ()
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    RUN ALL WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+//
+// WORKFLOW: Execute a single named workflow for the pipeline
+// 
 //
 workflow {
-    YGGDRASIL ()
+    CTG_YGGDRASIL ()
 }
 
 /*
