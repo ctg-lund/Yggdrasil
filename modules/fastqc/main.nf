@@ -1,5 +1,4 @@
 process FASTQC {
-	tag "${proj}"
 	
 	input:
 	tuple val(proj), path(demux_dir)
