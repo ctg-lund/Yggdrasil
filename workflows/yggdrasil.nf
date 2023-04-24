@@ -68,4 +68,5 @@ workflow YGGDRASIL {
     if ("${params.dragen}") {
         DRAGEN(ch_projids)
     }
+    */
 }
