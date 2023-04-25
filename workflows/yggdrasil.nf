@@ -55,7 +55,6 @@ workflow YGGDRASIL {
     FASTQC(
         ch_projids
     )
-    FASTQC.out.collect().view()
     /*
     MULTIQC(
         FASTQC.out.collect()
