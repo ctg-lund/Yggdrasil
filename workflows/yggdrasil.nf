@@ -50,8 +50,7 @@ workflow YGGDRASIL {
     )
     
     // the following channel formation needs to be tested
-    ch_projids = Channel
-        .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
+    ch_projids = BCLCONVERT.out.demux_out
         .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
         .view()
     /*
