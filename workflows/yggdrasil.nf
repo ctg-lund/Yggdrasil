@@ -9,7 +9,7 @@ nextflow.enable.dsl = 2
 if (params.samplesheet) {
     ch_samplesheet = Channel.fromPath("${params.samplesheet}", checkIfExists: true)
 } else { 
-    ch_samplesheet = Channel.fromPath("${params.rawdata}/CTG_SampleSheet.csv", checkIfExists: true)
+    ch_samplesheet = Channel.fromPath("${params.rawdata}/CTG_SampleSheet*.csv", checkIfExists: true)
 }
 
 // manual or automatic outdir
@@ -50,11 +50,12 @@ workflow YGGDRASIL {
         ch_samplesheet,
         ch_raw
     )
-    /*
     // the following channel formation needs to be tested
     ch_projids = Channel
         .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
         .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
+    ch_projids.view()
+    /*
     FASTQC(
         ch_projids
     )
