@@ -44,17 +44,16 @@ workflow YGGDRASIL {
     //INTEROP_QC (
     //    ch_raw
     //)
-    ch_samplesheet.view()
-    ch_raw.view()
     BCLCONVERT(
         ch_samplesheet,
         ch_raw
     )
-    BCLCONVERT.out.demux_out.view()
+    
     // the following channel formation needs to be tested
-    //ch_projids = Channel
-    //    .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
-    //    .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
+    ch_projids = Channel
+        .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
+        .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
+        .view()
     /*
     FASTQC(
         ch_projids
