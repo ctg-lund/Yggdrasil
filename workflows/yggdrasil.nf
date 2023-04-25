@@ -54,7 +54,8 @@ workflow YGGDRASIL {
         .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
     FASTQC(
         ch_projids
-    ).out.collect().view()
+    )
+    FASTQC.out.collect().view()
     /*
     MULTIQC(
         FASTQC.out.collect()
