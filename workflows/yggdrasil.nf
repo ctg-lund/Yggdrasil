@@ -50,11 +50,11 @@ workflow YGGDRASIL {
         ch_samplesheet,
         ch_raw
     )
+    BCLCONVERT.out.demux_out.view()
     // the following channel formation needs to be tested
-    ch_projids = Channel
-        .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
-        .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
-    ch_projids.view()
+    //ch_projids = Channel
+    //    .fromPath(BCLCONVERT.out.demux_out, type: 'dir')
+    //    .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
     /*
     FASTQC(
         ch_projids
