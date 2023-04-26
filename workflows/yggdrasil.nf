@@ -64,11 +64,11 @@ workflow YGGDRASIL {
     
     ch_demux.view()
     ch_multiqc.view()
-    
+    /*
     ch_publish = ch_demux
         .combine(ch_multiqc, by = 0)
     ch_publish.view()
-    /*PUBLISH_SEQ_QC(
+    PUBLISH_SEQ_QC(
         ch_raw,
         ch_publish
     )
