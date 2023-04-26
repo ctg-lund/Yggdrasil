@@ -10,7 +10,7 @@ process MULTIQC {
 	shell:
 	"""
 	mkdir -p qc
-	multiqc -s -n fastqc_multiqc.html -o qc/ ${zips}
+	multiqc -s -n fastqc_multiqc.html -o qc/ .
 	"""
 	
 	stub:
