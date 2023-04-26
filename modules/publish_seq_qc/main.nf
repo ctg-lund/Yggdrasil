@@ -9,15 +9,15 @@ process PUBLISH_SEQ_QC {
     tuple val(proj), path(demux_dir), path(qc_dir)
 
     output:
-    path("${proj}/*")
+    path("${proj}_delivery/*")
     
     shell:
     """
     fc=`echo ${raw.baseName} | cut -f 4 -d '_'`
-    mkdir -p ${proj}/"\${fc}"/0_fastq
-    mkdir -p ${proj}/"\${fc}"/1_qc
+    mkdir -p ${proj}_delivery/"\${fc}"/0_fastq
+    mkdir -p ${proj}_delivery/"\${fc}"/1_qc
 
-    cp -r ${demux_dir}/* ${proj}/"\${fc}"/0_fastq/
-    cp -r ${qc_dir}/* ${proj}/"\${fc}"/1_qc/
+    cp -r ${demux_dir}/* ${proj}_delivery/"\${fc}"/0_fastq/
+    cp -r ${qc_dir}/* ${proj}_delivery/"\${fc}"/1_qc/
     """ 
 }
