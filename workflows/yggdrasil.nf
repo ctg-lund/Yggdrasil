@@ -72,7 +72,9 @@ workflow YGGDRASIL {
     )
 
     //Example for DRAGEN
+    /*
     if ("${params.dragen}") {
         DRAGEN(ch_demux)
     }
+    */
 }
