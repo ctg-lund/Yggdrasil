@@ -55,13 +55,16 @@ workflow YGGDRASIL {
     FASTQC(
         ch_demux
     )
-    /*
+    
     MULTIQC(
         FASTQC.out.zip
     ).out.set {ch_multiqc}
+    ch_demux.view()
+    ch_multiqc.view()
     ch_publish = ch_demux
         .combine(ch_multiqc, by = 0)
-    PUBLISH_SEQ_QC(
+    ch_publish.view()
+    /*PUBLISH_SEQ_QC(
         ch_raw,
         ch_publish
     )
