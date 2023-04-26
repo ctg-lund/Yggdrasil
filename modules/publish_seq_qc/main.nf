@@ -17,7 +17,7 @@ process PUBLISH_SEQ_QC {
     mkdir -p ${proj}_delivery/"\${fc}"/0_fastq
     mkdir -p ${proj}_delivery/"\${fc}"/1_qc
 
-    cp -r ${demux_dir}/* ${proj}_delivery/"\${fc}"/0_fastq/
+    cp -r ${demux_dir}/*gz ${proj}_delivery/"\${fc}"/0_fastq/
     cp -r ${qc_dir}/* ${proj}_delivery/"\${fc}"/1_qc/
     """ 
 }
