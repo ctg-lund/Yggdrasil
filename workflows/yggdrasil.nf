@@ -65,8 +65,7 @@ workflow YGGDRASIL {
     
     ch_publish = ch_demux
         .join(ch_multiqc)
-    ch_publish.view()
-    /*
+    
     PUBLISH_SEQ_QC(
         ch_raw,
         ch_publish
