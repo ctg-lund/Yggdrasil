@@ -73,6 +73,6 @@ workflow YGGDRASIL {
 
     //Example for DRAGEN
     if ("${params.dragen}") {
-        DRAGEN(ch_projids)
+        DRAGEN(ch_demux)
     }
 }
