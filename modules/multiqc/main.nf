@@ -2,12 +2,10 @@ process MULTIQC {
 	tag "${proj}"
 	
 	input:
-	tuple val(proj), path(demux_dir)
 	tuple val(proj), path(zips)
 	
 	output:
-	tuple val(proj), path(demux_dir)
-	path "qc*"
+	tuple val(proj), path("qc*")
 	
 	shell:
 	"""

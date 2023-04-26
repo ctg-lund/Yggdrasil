@@ -50,18 +50,20 @@ workflow YGGDRASIL {
     )
     
     // the following channel formation needs to be tested
-    ch_projids = BCLCONVERT.out.demux_out
+    ch_demux = BCLCONVERT.out.demux_out
         .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
     FASTQC(
-        ch_projids
+        ch_demux
     )
     /*
     MULTIQC(
-        FASTQC.out.collect()
-    ).out.set {ch_all_proj}
+        FASTQC.out.zip
+    ).out.set {ch_multiqc}
+    ch_publish = ch_demux
+        .combine(ch_multiqc, by = 0)
     PUBLISH_SEQ_QC(
         ch_raw,
-        ch_all_proj
+        ch_publish
     )
 
     //Example for DRAGEN

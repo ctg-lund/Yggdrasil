@@ -6,8 +6,7 @@ process PUBLISH_SEQ_QC {
 
     input:
     path(raw)
-    tuple val(proj), path(demux_dir)
-    path qc_dir
+    tuple val(proj), path(demux_dir), path(qc_dir)
 
     output:
     path("${proj}/*")

@@ -4,7 +4,6 @@ process FASTQC {
 	tuple val(proj), path(demux_dir)
 	
 	output:
-	tuple val(proj), path(demux_dir), emit: demux_out
 	tuple val(proj), path("${proj}_fastqc/*.zip") , emit: zip
 	
 	shell:
