@@ -1,16 +1,21 @@
 process FASTQC {
-
+	tag "${proj}"
 	input:
-		path(demux_dir)
+	tuple val(proj), path(demux_dir)
+	
 	output:
-        path "qc*"
+	tuple val(proj), path("${proj}_fastqc/*.zip") , emit: zip
+	
 	shell:
 	"""
-    # Fastqc scripts
+	mkdir -p ${proj}_fastqc
+	yg_fastqc.sh ${demux_dir} ${proj}_fastqc
 	"""
+	
 	stub:
 	"""
-    mkdir -p qc/fastqc
-    touch qc/fastqc/sample_id.fastqc.html
+    mkdir -p proj_fastqc
+	touch proj_fastqc/sample_id.fastqc.html
+	touch proj_fastqc/sample_id.fastqc.zip
 	"""
 }

@@ -9,11 +9,11 @@ include { FASTQC } from '../modules/fastqc/main'
 include { MULTIQC } from '../modules/multiqc/main'
 include { PUBLISH_PROJECT } from '../modules/publish_project/main'
 
+
 workflow singleCell {
     interop_ch = INTEROP(
         runfolder
     )
-
     mkfastq_ch = MKFASTQ(
         samplesheet,
         runfolder
@@ -29,4 +29,5 @@ workflow singleCell {
     )
     
     
+
 }
