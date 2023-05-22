@@ -15,7 +15,7 @@ lfs_project_dir="${lfs_root}/${project_id}"
 password=$(openssl rand --base64 16)
 # remote execution:
 # create user: User_Name:Password:UID:GID:Comments:User_Home_Directory:Users_Shell_Name
-ssh "${USER}@lfs603.srv.lu.se sudo echo '${project_id}:${password}::::${lfs_project_dir}:/bin/bash' | newusers"
+ssh "${USER}@lfs603.srv.lu.se echo '${project_id}:${password}::::${lfs_project_dir}:/bin/bash' |sudo newusers"
 # add user to ssh_users group
 ssh "${USER}@lfs603.srv.lu.se sudo adduser ${project_id} ssh_users"
 # sync directory to lfs603
