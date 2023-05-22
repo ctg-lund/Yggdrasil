@@ -23,3 +23,15 @@ As a rule of thumb, before we merge pull requests on main, we should perform the
 
 We should probably forget about symlinking raw data, we are not planning to deliver the rawdata in the future!
 
+###
+
+An example command to run the pipeline:
+
+```
+nextflow run Yggdrasil/ \
+    -profile ctg \
+    --samplesheet CTG_SampleSheet.csv \
+    --rawdata Illumina_run_directory \
+    --outdir yggdrasil_test
+```
+
