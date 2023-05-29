@@ -26,7 +26,7 @@ sudo adduser ${project_id} ssh_users
 _remote_cmds
 
 # sync directory to lfs603
-rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${data%%/}" "${$USER}@lfs603.srv.lu.se:${lfs_project_dir}"
+rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${data%%/}" "${USER}@lfs603.srv.lu.se:${lfs_project_dir}"
 
 # output the password to file
 echo -e "${project_id}\n${password}\n\n" > "${HOME}/passwords.txt"
