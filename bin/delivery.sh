@@ -26,7 +26,16 @@ sudo adduser ${project_id} ssh_users
 _remote_cmds
 
 # sync directory to lfs603
-rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${data%%/}" "${USER}@lfs603.srv.lu.se:${lfs_project_dir}"
+rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${data%%/}" "${USER}@lfs603.srv.lu.se:${lfs_project_dir}" || exit 1
 
 # output the password to file
-echo -e "${project_id}\n${password}\n\n" > "${HOME}/passwords.txt"
+# echo -e "${project_id}\n${password}\n\n" > "${HOME}/passwords.txt"
+
+# post transfer commands
+ssh -T "${USER}@lfs603.srv.lu.se" << _remote_cmds
+# create project directory
+sudo chown -R ${project_id}:${USER} $lfs_project_dir
+sudo bash /home/mattis/Scripts/send_project.sh ${project_id} ${password}
+
+# add commands above this line
+_remote_cmds
