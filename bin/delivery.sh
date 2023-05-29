@@ -19,7 +19,7 @@ ssh "${USER}@lfs603.srv.lu.se sudo echo '${project_id}:${password}::::${lfs_proj
 # add user to ssh_users group
 ssh "${USER}@lfs603.srv.lu.se sudo adduser ${project_id} ssh_users"
 # sync directory to lfs603
-rsync -av --progress --human-readable --no-perms "${data%%/} ${$USER}@lfs603.srv.lu.se:${lfs_project_dir}"
+rsync -av --progress --human-readable --no-perms "${data%%/} ${USER}@lfs603.srv.lu.se:${lfs_project_dir}"
 
 # output the password to file
 echo "${password}" > "password.txt"
