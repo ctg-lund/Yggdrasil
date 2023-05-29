@@ -12,7 +12,7 @@ project_id=$2
 # Set lfs603 ${project_id} and target folders
 lfs_project_dir="${lfs_root}/${project_id}" 
 # generate a password
-password=$(openssl rand --base64 16)
+password=$(date +%s | sha256sum | base64 | head -c 32)
 # remote execution:
 ssh -T "${USER}@lfs603.srv.lu.se" << _remote_cmds
 # create project directory
