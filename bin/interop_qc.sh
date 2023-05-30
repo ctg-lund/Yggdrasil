@@ -7,7 +7,7 @@ runfolder_name=$(basename ${runfolder_path})
 interop_id="ctg_interop_${runfolder_name}"
 interop_out="${runfolder_path}/ctg-interop"
 ctg_qc_out="/projects/fs1/shared/ctg-qc/interop"
-interop_plots_script="/projects/fs1/shared/scripts/interop-summaries/bin/interop-plots.sh"
+interop_plots_script="/projects/fs1/shared/Yggdrasil/bin/interop-plot.sh"
 ## singularity container/command for python scripts
 singularity_cmd="singularity exec --bind /projects/ /projects/fs1/shared/ctg-containers/ngs-tools/ngs-tools.sif"
 mkdir -p ${interop_out}
