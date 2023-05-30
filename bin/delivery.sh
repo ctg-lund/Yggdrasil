@@ -35,7 +35,37 @@ rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${da
 ssh -T "${USER}@lfs603.srv.lu.se" << _remote_cmds
 # create project directory
 sudo chown -R ${project_id}:${USER} $lfs_project_dir
-sudo bash /home/mattis/Scripts/send_project.sh ${project_id} ${password}
+mutt -s "CTG delivery - project ${project_id}" mattis.knulst@med.lu.se \
+	-e 'unmy_hdr from; my_hdr From: CTG data delivery <mattis.knulst@med.lu.se>' \
+	-e 'set content_type=text/html' \
+	-a "/srv/data/ctgstaff/ctg-delivery-guide-v1.1.pdf" \
+<< EOM
+<h1>CTG data delivery</h1>
+<h3>The sequencing and processing of your CTG samples is completed and ready for download. Please find download instructions below and QC reports attached.</h3>
+<img src="https://content.ilabsolutions.com/wp-content/uploads/2021/12/2021-12-08_15-26-03.jpg" width="500">
+<h2>CTG-Project-ID</h2><h2 style="background-color:CadetBlue; color:white;">${project_id}</h2>
+<br>
+<hr>
+<h3>You can download the files with:</h3>
+<p>
+<span style="background-color:lightgrey">User: ${project_id}</span>
+<p>Password: <span style="background-color:lightgrey">${password}</span>
+<p>
+<p>Example scp command:</p>
+<p><span style="background-color:lightgrey">scp -P 22022 -r ${project_id}@lfs603.srv.lu.se:/srv/data/${project_id} . </span></p>
+<br>
+Find attached <b>ctg-delivery-guide-v1.1.pdf</b> for download instructions!
+<p>Please do not hesitate to contact us if you have any questions or issues.</p>
+<div style="white-space: pre">
+Best regards,
+CTG Bioinformatics
+Center for Translational Genomics
+Clinical Genomics
+Lund
+</div>
+EOM
+
+
 
 # add commands above this line
 _remote_cmds
