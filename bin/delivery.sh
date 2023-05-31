@@ -40,29 +40,30 @@ mutt -s "CTG delivery - project ${project_id}" mattis.knulst@med.lu.se \
 	-e 'set content_type=text/html' \
 	-a "/srv/data/ctgstaff/ctg-delivery-guide-v1.1.pdf" \
 << EOM
-<h1>CTG data delivery</h1>
-<h3>The sequencing and processing of your CTG samples is completed and ready for download. Please find download instructions below and QC reports attached.</h3>
-<img src="https://content.ilabsolutions.com/wp-content/uploads/2021/12/2021-12-08_15-26-03.jpg" width="500">
-<h2>CTG-Project-ID</h2><h2 style="background-color:CadetBlue; color:white;">${project_id}</h2>
-<br>
+<h1 style="font-size: 24px; color: #333333;">CTG Data Delivery</h1>
+<p style="font-size: 18px; color: #333333;">The sequencing and processing of your CTG samples is completed and ready for download. Please find download instructions below and QC reports attached.</p>
+<img src="https://content.ilabsolutions.com/wp-content/uploads/2021/12/2021-12-08_15-26-03.jpg" width="500" alt="CTG Data Delivery">
+<h2 style="font-size: 20px; color: #333333;">CTG-Project-ID</h2>
+<h2 style="font-size: 20px; background-color: CadetBlue; color: white;">${project_id}</h2>
 <hr>
-<h3>You can download the files with:</h3>
-<p>
-<span style="background-color:lightgrey">User: ${project_id}</span>
-<p>Password: <span style="background-color:lightgrey">${password}</span>
-<p>
-<p>Example scp command:</p>
-<p><span style="background-color:lightgrey">scp -P 22022 -r ${project_id}@lfs603.srv.lu.se:/srv/data/${project_id} . </span></p>
-<br>
-Find attached <b>ctg-delivery-guide-v1.1.pdf</b> for download instructions!
-<p>Please do not hesitate to contact us if you have any questions or issues.</p>
-<div style="white-space: pre">
-Best regards,
-CTG Bioinformatics
-Center for Translational Genomics
-Clinical Genomics
-Lund
-</div>
+<h3 style="font-size: 18px; color: #333333;">You can download the files with:</h3>
+<p style="font-size: 16px; color: #333333;">
+    <span style="background-color: lightgrey">User: ${project_id}</span><br>
+    Password: <span style="background-color: lightgrey">${password}</span><br><br>
+    Example scp command:<br>
+    <span style="background-color: lightgrey">scp -P 22022 -r ${project_id}@lfs603.srv.lu.se:/srv/data/${project_id} . </span>
+</p>
+<p style="font-size: 16px; color: #333333;">Find attached <b>ctg-delivery-guide-v1.1.pdf</b> for download instructions!</p>
+<p style="font-size: 16px; color: #333333;">Please do not hesitate to contact us if you have any questions or issues.</p>
+<p style="font-size: 16px; color: #333333;">
+    Best regards,<br>
+    CTG Bioinformatics<br>
+    Center for Translational Genomics<br>
+    Clinical Genomics<br>
+    Lund
+</p>
+
+
 EOM
 
 
