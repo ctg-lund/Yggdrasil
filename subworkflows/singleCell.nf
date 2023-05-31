@@ -10,7 +10,7 @@ include { MULTIQC } from '../modules/multiqc/main'
 include { PUBLISH_PROJECT } from '../modules/publish_project/main'
 
 
-workflow singleCell {
+workflow SINGLE_CELL {
     interop_ch = INTEROP_QC(
         runfolder
     )
