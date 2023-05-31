@@ -13,7 +13,7 @@ process PUBLISH_SEQ_QC {
     
     shell:
     """
-    fc=$(echo ${raw.baseName} | cut -f 4 -d '_')
+    fc=\$(echo ${raw.baseName} | cut -f 4 -d '_')
     mkdir -p ${proj}_delivery/"\${fc}"/0_fastq
     mkdir -p ${proj}_delivery/"\${fc}"/1_qc
 
