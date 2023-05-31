@@ -9,7 +9,7 @@ process FASTQC {
 	shell:
 	"""
 	mkdir -p ${proj}_fastqc
-	yg_fastqc.sh ${demux_dir} ${proj}_fastqc
+	fastqc --threads 8 -o ${proj}_fastqc ${demux_dir}/*gz 
 	"""
 	
 	stub:
