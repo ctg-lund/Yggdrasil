@@ -8,6 +8,7 @@ process INTEROP_QC {
     shell:
     """
     #Interops qc script
+    touch qc/interop/interops_qc.html
     """ 
     stub:
     """

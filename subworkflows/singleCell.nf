@@ -4,14 +4,14 @@ samplesheet = params.samplesheet
 runfolder = params.runfolder
 
 include { MKFASTQ } from '../modules/mkfastq/main'
-include { INTEROP } from '../modules/interop/main'
+include { INTEROP_QC } from '../modules/interop/main'
 include { FASTQC } from '../modules/fastqc/main'
 include { MULTIQC } from '../modules/multiqc/main'
 include { PUBLISH_PROJECT } from '../modules/publish_project/main'
 
 
 workflow singleCell {
-    interop_ch = INTEROP(
+    interop_ch = INTEROP_QC(
         runfolder
     )
     mkfastq_ch = MKFASTQ(
