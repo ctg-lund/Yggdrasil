@@ -3,16 +3,15 @@ process INTEROP_QC {
     path(raw)
 
     output:
-    path("interops_qc.html"), emit: interop_qc
+    path("interop_qc/multiqc_*"), emit: interop_qc
 
     shell:
     """
-    #Interops qc script
-    touch qc/interop/interops_qc.html
+    interop_all.sh ${raw}
     """ 
     stub:
     """
-    mkdir -p qc/interop
-    touch qc/interop/interops_qc.html
+    mkdir -p interop_qc/multiqc_FlowCellID
+    touch interop_qc/multiqc_FlowCellID/multiqc_interops_qc.html
     """
 }
