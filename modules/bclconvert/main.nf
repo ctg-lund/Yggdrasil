@@ -4,6 +4,7 @@
 // CTG_SampleSheet.csv
 
 process BCLCONVERT {
+    tag "$raw"
     input:
     path(demux_samplesheet)
     path(raw)

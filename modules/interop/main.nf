@@ -1,4 +1,5 @@
 process INTEROP_QC {
+    tag "$raw"
     input:
     path(raw)
 
