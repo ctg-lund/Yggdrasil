@@ -91,7 +91,7 @@ workflow YGGDRASIL {
 
 workflow.onComplete { 
     if (workflow.success) {
-        writetofile(java.util.Date()+" [Information] Yggdrasil workflow completed successfully #")
+        writetofile("${java.util.Date()} [Information] Yggdrasil workflow completed successfully #")
     } else {
         writetofile(java.util.Date()+" [Critical] ${params.date}${workflow.errorMessage}")
     }
