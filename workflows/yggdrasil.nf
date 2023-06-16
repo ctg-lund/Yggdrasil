@@ -6,13 +6,12 @@
 nextflow.enable.dsl = 2
 
 // Function for appending message to log file
-// Before it writes the line, it checks the number on the last line followed by # and increments it by 1 for the new line
 def writetofile(String text) {
     def file = new File(params.nextflow_log)
     def lastline = file.readLines().last()
-    def newNumber = lastline.split('#')[1] + 1
+    def newNumber = lastline.split('#')[1].toInteger() + 1
     file.withWriterAppend { out ->
-        out.println(text+newNumber+"\n")
+        out.println(text+newNumber)
     }
 }
 // manual or automatic samplesheet
