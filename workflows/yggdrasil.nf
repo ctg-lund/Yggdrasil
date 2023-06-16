@@ -8,12 +8,13 @@ nextflow.enable.dsl = 2
 // Function for appending message to log file
 // Before it writes the line, it checks the number on the last line followed by # and increments it by 1 for the new line
 def writetofile(String text) {
-    new File(params.nextflow_log).withWriterAppend { out ->
-        def lastline = out.readLines().last()
-        def newNumber = lastline.split('#')[1] + 1
+    def file = new File(params.nextflow_log)
+    def lastline = file.readLines().last()
+    def newNumber = lastline.split('#')[1] + 1
+    file.withWriterAppend { out ->
         out.println(text+"#"+newNumber+"\n")
-        }
     }
+}
 // manual or automatic samplesheet
 if (params.samplesheet) {
     ch_samplesheet = Channel.fromPath("${params.samplesheet}", checkIfExists: true)
@@ -91,8 +92,8 @@ workflow YGGDRASIL {
 
 workflow.onComplete { 
     if (workflow.success) {
-        writetofile("${java.util.Date()} [Information] Yggdrasil workflow completed successfully #")
+        writetofile("${new Date()} [Information] Yggdrasil workflow completed successfully #")
     } else {
-        writetofile(java.util.Date()+" [Critical] ${params.date}${workflow.errorMessage}")
+        writetofile("${new Date()} [Critical] ${workflow.errorMessage}")
     }
 }
