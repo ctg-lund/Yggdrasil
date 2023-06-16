@@ -89,7 +89,7 @@ workflow YGGDRASIL {
     */
 }
 
-YGGDRASIL.onComplete { 
+workflow.onComplete { 
     if (workflow.success) {
         writetofile(java.util.Date()+" [Information] Yggdrasil workflow completed successfully #")
     } else {
