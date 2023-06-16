@@ -12,7 +12,7 @@ def writetofile(String text) {
     def lastline = file.readLines().last()
     def newNumber = lastline.split('#')[1] + 1
     file.withWriterAppend { out ->
-        out.println(text+"#"+newNumber+"\n")
+        out.println(text+newNumber+"\n")
     }
 }
 // manual or automatic samplesheet
@@ -92,8 +92,8 @@ workflow YGGDRASIL {
 
 workflow.onComplete { 
     if (workflow.success) {
-        writetofile("${new Date()} [Information] Yggdrasil workflow completed successfully #")
+        writetofile("${new Date()} [Information] Yggdrasil workflow completed successfully for ${params.rawdata} #")
     } else {
-        writetofile("${new Date()} [Critical] ${workflow.errorMessage}")
+        writetofile("${new Date()} [Critical] Yggdrasil run ${params.rawdata} failed: ${workflow.errorMessage} #")
     }
 }
