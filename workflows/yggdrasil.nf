@@ -93,6 +93,6 @@ workflow.onComplete {
     if (workflow.success) {
         writetofile("${new Date()} [Information] Yggdrasil workflow completed successfully for ${params.rawdata} #")
     } else {
-        writetofile("${new Date()} [Critical] Yggdrasil run ${params.rawdata} failed: ${workflow.errorMessage} #")
+        writetofile("${new Date()} [Critical] Yggdrasil run ${params.rawdata} failed! Error message: ${workflow.errorMessage} #")
     }
 }
