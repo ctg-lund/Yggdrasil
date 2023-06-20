@@ -5,6 +5,15 @@
 // Enable DSL2 functionality
 nextflow.enable.dsl = 2
 
+// Function for appending message to log file
+def writetofile(String text) {
+    def file = new File(params.nextflow_log)
+    def lastline = file.readLines().last()
+    def newNumber = lastline.split('#')[1].toInteger() + 1
+    file.withWriterAppend { out ->
+        out.println(text+newNumber)
+    }
+}
 // manual or automatic samplesheet
 if (params.samplesheet) {
     ch_samplesheet = Channel.fromPath("${params.samplesheet}", checkIfExists: true)
@@ -78,4 +87,12 @@ workflow YGGDRASIL {
         DRAGEN(ch_demux)
     }
     */
+}
+
+workflow.onComplete { 
+    if (workflow.success) {
+        writetofile("${new Date()} [Information] Yggdrasil workflow completed successfully for ${params.rawdata} #")
+    } else {
+        writetofile("${new Date()} [Critical] Yggdrasil run ${params.rawdata} failed! Error message: ${workflow.errorMessage} #")
+    }
 }

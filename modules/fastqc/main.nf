@@ -14,8 +14,8 @@ process FASTQC {
 	
 	stub:
 	"""
-    mkdir -p proj_fastqc
-	touch proj_fastqc/sample_id.fastqc.html
-	touch proj_fastqc/sample_id.fastqc.zip
+    mkdir -p ${proj}_fastqc
+	touch ${proj}_fastqc/sample_id.fastqc.html
+	touch ${proj}_fastqc/sample_id.fastqc.zip
 	"""
 }
