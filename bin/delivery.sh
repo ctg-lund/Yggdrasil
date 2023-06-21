@@ -7,6 +7,7 @@
 lfs_root="/srv/data"
 # first arg is the data to deliver
 data=$1
+size=$(du -sh "${data}" | cut -f1)
 # eg ../Jobs/proj_id we have to specify this
 project_id=$2
 # Set lfs603 ${project_id} and target folders
@@ -48,6 +49,7 @@ mutt -s "CTG delivery - project ${project_id}" mattis.knulst@med.lu.se \
 <hr>
 <h3 style="font-size: 18px; color: #333333;">You can download the files with:</h3>
 <p style="font-size: 16px; color: #333333;">
+    <b>Make sure you have enough space for your project! This download will take up: ${size} </b><br>
     <span style="background-color: lightgrey">User: ${project_id}</span><br>
     Password: <span style="background-color: lightgrey">${password}</span><br><br>
     Example scp command:<br>
