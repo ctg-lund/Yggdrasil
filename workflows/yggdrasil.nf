@@ -16,9 +16,9 @@ def writetofile(String text) {
 }
 // manual or automatic samplesheet
 if (params.samplesheet) {
-    ch_samplesheet = Channel.fromPath("${params.samplesheet}", checkIfExists: true)
+    ch_samplesheet = file("${params.samplesheet}", checkIfExists: true)
 } else { 
-    ch_samplesheet = Channel.fromPath("${params.rawdata}/CTG_SampleSheet*.csv", checkIfExists: true)
+    ch_samplesheet = file("${params.rawdata}/CTG_SampleSheet*.csv", checkIfExists: true)
 }
 
 // manual or automatic outdir
@@ -49,7 +49,7 @@ workflow YGGDRASIL {
     // get projectid from cron python script
     // ch_projectids = Channel.from(params.projectids.split(','))
 
-    ch_raw = Channel.fromPath(params.rawdata)
+    ch_raw = file(params.rawdata, checkIfExists: true, type: 'directory')
     //INTEROP_QC (
     //    ch_raw
     //)
