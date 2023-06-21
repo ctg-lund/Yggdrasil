@@ -6,8 +6,8 @@
 process BCLCONVERT {
     tag "$raw"
     input:
-    path(demux_samplesheet)
-    path(raw)
+    path demux_samplesheet
+    path raw
 
     output:
     path("2*_*"), emit: demux_out
