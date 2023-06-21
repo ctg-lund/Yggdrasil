@@ -54,24 +54,19 @@ workflow YGGDRASIL {
     //    ch_raw
     //)
     
-    BCLCONVERT(
+    ch_demux = BCLCONVERT(
         ch_samplesheet,
         ch_raw
     )
     
-    // the following channel formation needs to be tested
-    ch_demux = BCLCONVERT.out.demux_out
-        .map { file -> tuple(file.getBaseName(), file) } // This creates tuple of name of the project directory and project demux path
     
-    FASTQC(
-        ch_demux
+    fastqc_ch = FASTQC(
+        ch_demux.map { file -> tuple(file.getBaseName(), file) }
     )
     
-    MULTIQC(
-        FASTQC.out.zip
+    ch_multiqc = MULTIQC(
+        fastqc_ch.zip
     )
-
-    MULTIQC.out.set {ch_multiqc}
     
     ch_publish = ch_demux
         .join(ch_multiqc)
