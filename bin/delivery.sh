@@ -43,7 +43,7 @@ mutt -s "CTG delivery - project ${project_id}" mattis.knulst@med.lu.se \
 << EOM
 <h1 style="font-size: 24px; color: #333333;">CTG Data Delivery</h1>
 <p style="font-size: 18px; color: #333333;">
-    The sequencing and processing of your samples is completed and ready for download. Please find download instructions below and QC reports attached.
+    The sequencing and processing of your samples is completed and ready for download.
     <br><br>
     <b>IMPORTANT:</b>
     <ul>
