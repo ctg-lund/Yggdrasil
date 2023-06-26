@@ -42,7 +42,22 @@ mutt -s "CTG delivery - project ${project_id}" mattis.knulst@med.lu.se \
 	-a "/srv/data/ctgstaff/ctg-delivery-guide-v1.1.pdf" \
 << EOM
 <h1 style="font-size: 24px; color: #333333;">CTG Data Delivery</h1>
-<p style="font-size: 18px; color: #333333;">The sequencing and processing of your CTG samples is completed and ready for download. Please find download instructions below and QC reports attached.</p>
+<p style="font-size: 18px; color: #333333;">
+    The sequencing and processing of your samples is completed and ready for download.
+    <br><br>
+    <b>IMPORTANT:</b>
+    <ul>
+        <li>Our delivery server has limited storage capacity. Please retrieve your data within <b>one week</b> of receiving this email or let us know when you are planning to download the data. A full delivery server can cause delays for everyone.</li>
+        <li>We keep raw data that can be used to reconstruct your data on our HPC for a limited time:
+            <ul>
+                <li>Sequencing only: 30 days</li>
+                <li>Other projects: 90 days</li>
+            </ul>
+            This time is counted from when the data was sequenced. After that, we need to clear raw data to enable us to process more projects. Please note that there is no guarantee that your raw data will still be with us after the above specified time.
+        </li>
+    </ul>
+</p>
+
 <img src="https://content.ilabsolutions.com/wp-content/uploads/2021/12/2021-12-08_15-26-03.jpg" width="500" alt="CTG Data Delivery">
 <h2 style="font-size: 20px; color: #333333;">CTG-Project-ID</h2>
 <h2 style="font-size: 20px; background-color: CadetBlue; color: white;">${project_id}</h2>
