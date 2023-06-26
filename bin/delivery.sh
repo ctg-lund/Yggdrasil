@@ -10,6 +10,13 @@ data=$1
 size=$(du -sh "${data}" | cut -f1)
 # eg ../Jobs/proj_id we have to specify this
 project_id=$2
+# set mail adress to third argument, if not set use default address to mattis
+mail_address=$3
+if [ -z "$mail_address" ]
+then
+    mail_address="mattis.knulst@med.lu.se"
+fi
+
 # Set lfs603 ${project_id} and target folders
 lfs_project_dir="${lfs_root}/${project_id}" 
 # generate a password
@@ -36,8 +43,8 @@ rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${da
 ssh -T "${USER}@lfs603.srv.lu.se" << _remote_cmds
 # create project directory
 sudo chown -R ${project_id}:${USER} $lfs_project_dir
-mutt -s "CTG delivery - project ${project_id}" mattis.knulst@med.lu.se \
-	-e 'unmy_hdr from; my_hdr From: CTG data delivery <mattis.knulst@med.lu.se>' \
+mutt -s "CTG delivery - project ${project_id}" ${mail_address} \
+	-e 'unmy_hdr from; my_hdr From: CTG data delivery <${mail_address}>' \
 	-e 'set content_type=text/html' \
 	-a "/srv/data/ctgstaff/ctg-delivery-guide-v1.1.pdf" \
 << EOM
