@@ -19,12 +19,10 @@ if (params.outdir) {
     params.publish_dir = "${params.project_root}" 
 }
 
-if (params.dragen) {
-    dragen = true
-}
-
 // Including modules
+include { PARSE_SS } from '../modules/parse_ss/main'
 include { INTEROP_QC } from '../modules/interop/main'
+include { BCL_DELIVERY } from '../modules/bcl_delivery/main'
 include { BCLCONVERT } from '../modules/bclconvert/main'
 include { FASTQC } from '../modules/fastqc/main'
 include { MULTIQC } from '../modules/multiqc/main'
@@ -33,21 +31,48 @@ include { PUBLISH_SEQ_QC } from '../modules/publish_seq_qc/main'
 // Including subworkflows
 
 include { SINGLE_CELL                   } from '../subworkflows/singleCell'
-include { DRAGEN                   } from '../subworkflows/dragen'
+include { DRAGEN                        } from '../subworkflows/dragen'
 
 // Define workflow
 workflow YGGDRASIL {
-    // get projectid from cron python script
+    // get projectid from cron python script # Lokesh: Let the cron do least possible things! We can get the project ids along with what their respective delivery types are inside Yggdrasil in a python script! 
+    // We can keep both the information of the projects and also the delivery-type in the same channel.
     // ch_projectids = Channel.from(params.projectids.split(','))
+    PARSE_SS(ch_samplesheet)
+    
+    ch_raw_delivery = PARSE_SS.out.ss_projIDs
+        .splitCsv(header: true, sep: ',')
+        .filter { row -> row.Delivery == 'BCL' }
+    
+    ch_fastq_delivery = PARSE_SS.out.ss_projIDs
+        .splitCsv(header: true, sep: ',')
+        .filter { row -> row.Delivery == 'FASTQ' }
+    
+    ch_dragen_delivery = PARSE_SS.out.ss_projIDs
+        .splitCsv(header: true, sep: ',')
+        .filter { row -> row.Delivery == 'DRAGEN' }
+    
+    ch_rnaseq_delivery = PARSE_SS.out.ss_projIDs
+        .splitCsv(header: true, sep: ',')
+        .filter { row -> row.Delivery == 'RNASEQ' }
+    
+    ch_methylseq_delivery = PARSE_SS.out.ss_projIDs
+        .splitCsv(header: true, sep: ',')
+        .filter { row -> row.Delivery == 'METHYLSEQ' }
 
-    ch_raw = Channel.fromPath(params.rawdata)
+    ch_rawdata = Channel.fromPath(params.rawdata)
     //INTEROP_QC (
-    //    ch_raw
+    //    ch_rawdata
     //)
+
+    // if(!ch_raw_delivery.isEmpty()) {
+    //    BCL_DELIVERY(ch_rawdata)
+    //}else{
+
     
     BCLCONVERT(
         ch_samplesheet,
-        ch_raw
+        ch_rawdata
     )
     
     // the following channel formation needs to be tested
@@ -68,14 +93,19 @@ workflow YGGDRASIL {
         .join(ch_multiqc)
     
     PUBLISH_SEQ_QC(
-        ch_raw,
+        ch_rawdata,
         ch_publish
     )
 
-    //Example for DRAGEN
+    //Example for DRAGEN or RNASEQ
+    // These settings will be read from samplesheet
+    // create channels for each kind of deliveries
+    // like ch_dragen
+
     /*
-    if ("${params.dragen}") {
-        DRAGEN(ch_demux)
+    if (!ch_dragen.isEmpty()) {
+        DRAGEN(ch_dragen)
     }
     */
+    //}
 }
