@@ -27,6 +27,7 @@ include { BCLCONVERT } from '../modules/bclconvert/main'
 include { FASTQC } from '../modules/fastqc/main'
 include { MULTIQC } from '../modules/multiqc/main'
 include { PUBLISH_SEQ_QC } from '../modules/publish_seq_qc/main'
+include { NFCORE_RNASEQ } from '../modules/nfcore_rnaseq//main'
 
 // Including subworkflows
 
