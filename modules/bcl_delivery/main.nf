@@ -9,7 +9,7 @@ process BCL_DELIVERY {
     shell:
     """
     module load parallel/20220722
-    parallel -j8 "md5sum {} >> ${raw}/md5.txt" ::: $(find ${raw}/Data -type f -print)
+    parallel -j8 "md5sum {} >> ${raw}/md5.txt" ::: \$(find ${raw}/Data -type f -print)
     sed -i s'/\/projects\/.*\/upload\/\w\+/./g' ${raw}/md5.txt
     
     """ 
