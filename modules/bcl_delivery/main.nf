@@ -8,14 +8,18 @@ process BCL_DELIVERY {
 
     shell:
     """
+    # spawn subshell to cd without changing wdir
+    # I do this because I want to avoid parsing md5 output
+    # this is to preserve bash functionality if this is pasted to a script
+    (
+    cd ${raw}
     module load parallel/20220722
     parallel -j8 "md5sum {} >> ${raw}/md5.txt" ::: \$(find ${raw}/Data -type f -print)
-    sed -i s'/\/projects\/.*\/upload\/\w\+/./g' ${raw}/md5.txt
-    
+    )
+        
     """ 
     stub:
     """
-    touch bcl_delivery.zip
-    touch bcl_delivery.md5
+    touch md5.txt
     """
 }
