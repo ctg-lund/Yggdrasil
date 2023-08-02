@@ -5,13 +5,17 @@
 # @Link    : link
 # @Version : 1.0.0
 
-import os
 import re
 import sys
-import copy
 import argparse
+import csv
 
-usage = """We will use this script to parse the CTG sample sheet and extract information necessary for Yggdrasil. At the moment it only takes the project ids from the run and species the deliveries for each project."""
+usage = """
+We will use this script to parse the CTG sample sheet and 
+extract information necessary for Yggdrasil. At the moment it only 
+takes the project ids from the run and species the deliveries for 
+each project.
+"""
 
 parser = argparse.ArgumentParser(description=usage)
 
@@ -36,21 +40,21 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-p0 = re.compile("\[Yggdrasil_Projects\]")
-p1 = re.compile("\[Yggdrasil_Samples\]")
-p2 = re.compile("\,")
+def parse_samplesheet(file_obj):
+    lines = file_obj.readlines()
 
-count = 0
+    start_parsing = False
+    cleaned_data = []
+    for line in lines:
+        if "[BCLConvert_Data]" in line:
+            start_parsing = True
+            continue
+        if start_parsing:
+            row = re.sub(r',+$', '', line.rstrip('\n'))  # remove trailing commas
+            cleaned_data.append(row)
 
-for line in args.infile:
-    line = line.rstrip("\n")
-    if re.match(p1, line) is not None:
-        count = 0
-    if count > 0:
-        if re.match(p2, line) is None:
-            print(line, file=args.outfile)
-    if re.match(p0, line) is not None:
-        count += 1
+    return cleaned_data
 
+args.outfile.write(parse_samplesheet(args.infile))
 args.outfile.close()
 args.infile.close()
