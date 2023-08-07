@@ -28,6 +28,7 @@ include { FASTQC } from '../modules/fastqc/main'
 include { MULTIQC } from '../modules/multiqc/main'
 include { PUBLISH_SEQ_QC } from '../modules/publish_seq_qc/main'
 include { NFCORE_RNASEQ } from '../modules/nfcore_rnaseq//main'
+include { PUBLISH_RNASEQ } from '../modules/publish_rnaseq/main'
 
 // Including subworkflows
 
@@ -44,22 +45,27 @@ workflow YGGDRASIL {
     ch_raw_delivery = PARSE_SS.out.ss_projIDs
         .splitCsv(header: true, sep: ',')
         .filter { row -> row.Delivery == 'BCL' }
+        .map { it -> it.Project_ID }
     
     ch_fastq_delivery = PARSE_SS.out.ss_projIDs
         .splitCsv(header: true, sep: ',')
         .filter { row -> row.Delivery == 'FASTQ' }
+        .map { it -> it.Project_ID }
     
     ch_dragen_delivery = PARSE_SS.out.ss_projIDs
         .splitCsv(header: true, sep: ',')
         .filter { row -> row.Delivery == 'DRAGEN' }
+        .map { it -> it.Project_ID }
     
     ch_rnaseq_delivery = PARSE_SS.out.ss_projIDs
         .splitCsv(header: true, sep: ',')
         .filter { row -> row.Delivery == 'RNASEQ' }
+        .map { it -> it.Project_ID }
     
     ch_methylseq_delivery = PARSE_SS.out.ss_projIDs
         .splitCsv(header: true, sep: ',')
         .filter { row -> row.Delivery == 'METHYLSEQ' }
+        .map { it -> it.Project_ID }
 
     ch_rawdata = Channel.fromPath(params.rawdata)
     //INTEROP_QC (
@@ -90,13 +96,33 @@ workflow YGGDRASIL {
 
     MULTIQC.out.set {ch_multiqc}
     
-    ch_publish = ch_demux
+    ch_fq_qc = ch_demux
         .join(ch_multiqc)
     
     PUBLISH_SEQ_QC(
         ch_rawdata,
-        ch_publish
+        ch_fq_qc
     )
+    
+    /** if(!ch_fastq_delivery.isEmpty()) {
+    // PUBLISH_PROJECT(
+        ch_fastq_delivery
+            .join(ch_fq_qc)
+    // )
+    }**/
+
+    /** if(!ch_rnaseq_delivery.isEmpty()) {
+    
+    NFCORE_RNASEQ(
+        ch_rnaseq_delivery
+            .join(ch_fq_qc)
+    )
+    ch_pub_rna = NFCORE_RNASEQ.out.rnaseq_out
+    PUBLISH_RNASEQ(
+        ch_rawdata,
+        ch_pub_rna
+    )
+    }**/
 
     //Example for DRAGEN or RNASEQ
     // These settings will be read from samplesheet

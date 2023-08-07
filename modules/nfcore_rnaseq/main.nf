@@ -1,10 +1,10 @@
 process NFCORE_RNASEQ {
 	tag "${proj}"
 	input:
-	tuple val(proj), path(demux_dir)
+	tuple val(proj), path(demux_dir), path(qc_dir)
 
     output:
-    path("nfcore_rnaseq_output"), emit: rnaseq_out
+    tuple val(proj), path("nfcore_rnaseq_output"), emit: rnaseq_out
 
     shell:
     """
