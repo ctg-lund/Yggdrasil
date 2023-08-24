@@ -1,43 +1,91 @@
-#!/bin/bash 
-# Usage:
-# bash delivery.sh DATA-TO-DELIVER
-# this script assumes $USER is same on lfs and lsens!
+#!/bin/bash
+
+# default values for optional arguments
+LFS_USER=$USER
+EMAIL="cglu.bioinformatics@scilifelab.se"
+
+# Define the options and arguments using getopts
+while getopts ":d:p:u:e:" opt; do
+  case "${opt}" in
+    d)
+      # Validate the directory argument
+      if [[ -d "${OPTARG}" ]]; then
+        DIRECTORY="${OPTARG}"
+      else
+        echo "Error: Invalid directory argument."
+        exit 1
+      fi
+      ;;
+    p)
+      # Validate the project ID argument
+      if [[ "${OPTARG}" =~ ^[0-9]{4}_[0-9]{3}$ ]]; then
+        PROJECT_ID="${OPTARG}"
+      else
+        echo "Error: Invalid project ID argument."
+        exit 1
+      fi
+      ;;
+    u)
+      # Set the LFS_USER variable to the specified user
+      LFS_USER="${OPTARG}"
+      ;;
+    e)
+      # Set the EMAIL variable to the specified email
+      EMAIL="${OPTARG}"
+      ;;
+    :)
+      echo "Error: Missing argument for -${OPTARG} option."
+      exit 1
+      ;;
+    *)
+      echo "Error: Invalid option -${OPTARG}."
+      exit 1
+      ;;
+  esac
+done
+
+# Validate if the required arguments are set
+if [[ -z "${DIRECTORY}" || -z "${PROJECT_ID}" ]]; then
+  echo "Error: Missing required arguments. Specify at least -d directory/path and p YYYY_XXX"
+  exit 1
+fi
+
+# print for testing purposes
+echo "The directory is: ${DIRECTORY}"
+echo "The project ID is: ${PROJECT_ID}"
+echo "The LFS_USER is: ${LFS_USER}"
+echo "The email is: ${EMAIL}"
+
 
 # delivery server root
 lfs_root="/srv/data"
-# first arg is the data to deliver
-data=$1
-size=$(du -sh "${data}" | cut -f1)
-# eg ../Jobs/proj_id we have to specify this
-project_id=$2
-# Set lfs603 ${project_id} and target folders
-lfs_project_dir="${lfs_root}/${project_id}" 
+
+size=$(du -sh "${DIRECTORY}" | cut -f1)
+# Set lfs603 ${PROJECT_ID} and target folders
+lfs_project_dir="${lfs_root}/${PROJECT_ID}" 
 # generate a password
 password=$(date +%s | sha256sum | base64 | head -c 32)
 # remote execution:
-ssh -T "${USER}@lfs603.srv.lu.se" << _remote_cmds
+ssh -T "${LFS_USER}@lfs603.srv.lu.se" << _remote_cmds
 # create project directory
 sudo mkdir -p $lfs_project_dir
 # create user: User_Name:Password:UID:GID:Comments:User_Home_Directory:Users_Shell_Name
-echo "${project_id}:${password}::::${lfs_project_dir}:/bin/bash" | sudo newusers
+echo "${PROJECT_ID}:${password}::::${lfs_project_dir}:/bin/bash" | sudo newusers
 # add user to ssh_users group
-sudo adduser ${project_id} ssh_users
+sudo adduser ${PROJECT_ID} ssh_users
 
 # add commands above this line
 _remote_cmds
 
-# sync directory to lfs603
-rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${data%%/}" "${USER}@lfs603.srv.lu.se:${lfs_project_dir}" || exit 1
-
-# output the password to file
-# echo -e "${project_id}\n${password}\n\n" > "${HOME}/passwords.txt"
+# sync directory to lfs603, beware the trailing /
+rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${DIRECTORY%%/}" "${LFS_USER}@lfs603.srv.lu.se:${lfs_project_dir}" || exit 1
 
 # post transfer commands
-ssh -T "${USER}@lfs603.srv.lu.se" << _remote_cmds
+ssh -T "${LFS_USER}@lfs603.srv.lu.se" << _remote_cmds
 # create project directory
-sudo chown -R ${project_id}:${USER} $lfs_project_dir
-mutt -s "CTG delivery - project ${project_id}" mattis.knulst@med.lu.se \
-	-e 'unmy_hdr from; my_hdr From: CTG data delivery <mattis.knulst@med.lu.se>' \
+sudo chown -R ${PROJECT_ID}:${LFS_USER} $lfs_project_dir
+mutt -s "CTG delivery - project ${PROJECT_ID}" ${EMAIL} \
+	-e 'unmy_hdr from; my_hdr From: CTG data delivery <${EMAIL}>' \
 	-e 'set content_type=text/html' \
 	-a "/srv/data/ctgstaff/ctg-delivery-guide-v1.1.pdf" \
 << EOM
@@ -60,15 +108,15 @@ mutt -s "CTG delivery - project ${project_id}" mattis.knulst@med.lu.se \
 
 <img src="https://content.ilabsolutions.com/wp-content/uploads/2021/12/2021-12-08_15-26-03.jpg" width="500" alt="CTG Data Delivery">
 <h2 style="font-size: 20px; color: #333333;">CTG-Project-ID</h2>
-<h2 style="font-size: 20px; background-color: CadetBlue; color: white;">${project_id}</h2>
+<h2 style="font-size: 20px; background-color: CadetBlue; color: white;">${PROJECT_ID}</h2>
 <hr>
 <h3 style="font-size: 18px; color: #333333;">You can download the files with:</h3>
 <p style="font-size: 16px; color: #333333;">
     <b>Make sure you have enough space for your project! This download will take up: ${size} </b><br>
-    <span style="background-color: lightgrey">User: ${project_id}</span><br>
+    <span style="background-color: lightgrey">User: ${PROJECT_ID}</span><br>
     Password: <span style="background-color: lightgrey">${password}</span><br><br>
     Example scp command:<br>
-    <span style="background-color: lightgrey">scp -P 22022 -r ${project_id}@lfs603.srv.lu.se:/srv/data/${project_id} . </span>
+    <span style="background-color: lightgrey">scp -P 22022 -r ${PROJECT_ID}@lfs603.srv.lu.se:/srv/data/${PROJECT_ID} . </span>
 </p>
 <p style="font-size: 16px; color: #333333;">Find attached <b>ctg-delivery-guide-v1.1.pdf</b> for download instructions!</p>
 <p style="font-size: 16px; color: #333333;">Please do not hesitate to contact us if you have any questions or issues.</p>
