@@ -2,7 +2,8 @@
 
 process PUBLISH_SEQ_QC {
     tag "${proj}"
-    publishDir "${params.publish_dir}", mode: 'copy'  
+    publishDir "${params.publish_dir}/${proj}_delivery/0_fastq/", mode: 'copy', pattern: "${proj}_delivery/0_fastq/*"
+    publishDir "${params.publish_dir}/${proj}_delivery/1_qc/", mode: 'copy', pattern: "${proj}_delivery/1_qc/*"
 
     input:
     path(raw)
@@ -14,10 +15,10 @@ process PUBLISH_SEQ_QC {
     shell:
     """
     fc=\$(echo ${raw.baseName} | cut -f 4 -d '_')
-    mkdir -p ${proj}_delivery/"\${fc}"/0_fastq
-    mkdir -p ${proj}_delivery/"\${fc}"/1_qc
+    mkdir -p ${proj}_delivery/0_fastq/"\${fc}"
+    mkdir -p ${proj}_delivery/1_qc/"\${fc}"
 
-    cp -r ${demux_dir}/*gz ${proj}_delivery/"\${fc}"/0_fastq/
-    cp -r ${qc_dir}/* ${proj}_delivery/"\${fc}"/1_qc/
+    cp -r ${demux_dir}/*gz ${proj}_delivery/0_fastq/"\${fc}"/
+    cp -r ${qc_dir}/* ${proj}_delivery/1_qc/"\${fc}"/
     """ 
 }
