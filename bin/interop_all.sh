@@ -35,4 +35,4 @@ mv ${runfolder_name}*_mqc.png interop_qc/"${runfolder_name}"/
 # MultiQC
 multiqc -f interop_qc/"${runfolder_name}"/ -n interop_qc/multiqc_${runfolder_name} 
 
-mv interop_qc/multiqc_${runfolder_name}.html /projects/fs1/shared/ctg-qc/qcapp2/sequencing-runs/${runfolder_name}/interop/multiqc_report.html
+mv interop_qc/multiqc_${runfolder_name}.html /projects/fs1/shared/ctg-qc/qcapp2/sequencing-runs/${runfolder_name}/qc/interop/multiqc_report.html
