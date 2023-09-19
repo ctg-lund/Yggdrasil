@@ -78,7 +78,7 @@ sudo adduser ${PROJECT_ID} ssh_users
 _remote_cmds
 
 # sync directory to lfs603, beware the trailing /
-rsync -rv --rsync-path="sudo rsync" --progress --human-readable --no-perms "${DIRECTORY%%/}" "${LFS_USER}@lfs603.srv.lu.se:${lfs_project_dir}" || exit 1
+rsync -rvL --rsync-path="sudo rsync" --progress --human-readable --no-perms "${DIRECTORY%%/}" "${LFS_USER}@lfs603.srv.lu.se:${lfs_project_dir}" || exit 1
 
 # post transfer commands
 ssh -T "${LFS_USER}@lfs603.srv.lu.se" << _remote_cmds
