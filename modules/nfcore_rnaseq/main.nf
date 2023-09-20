@@ -8,16 +8,15 @@ process NFCORE_RNASEQ {
 
     shell:
     """
-    rnaseq_ss.sh ${demux_dir}
-    nextflow \ #correct location of the working nextflow binary
-        run /home/lokeshwaran/nf-core-rnaseq/workflow/ \ # correct location of the nf-core-rnaseq workflow directory
+    export NXF_OFFLINE='TRUE'
+    /projects/fs1/shared/external-tools/nextflow/23.04.1/nextflow \ #correct location of the working nextflow binary
+        run /projects/fs1/shared/nfcore_rnaseq/ \ # correct location of the nf-core-rnaseq workflow directory
         -profile ctg \
-        -c /home/lokeshwaran/inbox/ctg_rnaseq.config \ #location of ctg_rnaseq.config from Yggdrasil
-        --fasta /home/lokeshwaran/nf-core-rnaseq/references/Homo_sapiens.GRCh38.dna_sm.primary_assembly.109.fa.gz \ # location of directory of references created for nf-core-rnaseq
-        --gtf /home/lokeshwaran/nf-core-rnaseq/references/Homo_sapiens.GRCh38.109.gtf.gz \ # location of directory of references created for nf-core-rnaseq
-        --gene_bed /home/lokeshwaran/nf-core-rnaseq/references/Homo_sapiens.GRCh38.109.bed \ # location of directory of references created for nf-core-rnaseq
+        -c /projects/fs1/shared/nfcore_rnaseq/configs/ctg_rnaseq.config \ #location of ctg_rnaseq.config 
+        --fasta /projects/fs1/shared/references/hg38/genome/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa \ # location of reference genome
+        --gtf /projects/fs1/shared/references/hg38/annotation/gtf/gencode/v33/gencode.v33.annotation.gtf \ # location of reference gtf
+        --gene_bed /projects/fs1/shared/references/hg38/annotation/gtf/gencode/v33/gencode.v33.annotation.genes.bed \ # location of reference bed
         --input rnaseq_test_ss.csv \
-        --skip_deseq2_qc \
         --outdir nfcore_rnaseq_output
     """ 
     stub:
