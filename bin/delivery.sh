@@ -87,7 +87,7 @@ sudo chown -R ${PROJECT_ID}:${LFS_USER} $lfs_project_dir
 mutt -s "CTG delivery - project ${PROJECT_ID}" ${EMAIL} \
 	-e 'unmy_hdr from; my_hdr From: CTG data delivery <${EMAIL}>' \
 	-e 'set content_type=text/html' \
-	-a "/srv/data/ctgstaff/ctg-delivery-guide-v1.1.pdf" \
+	-a "/srv/data/ctgstaff/latest.pdf" \
 << EOM
 <h1 style="font-size: 24px; color: #333333;">CTG Data Delivery</h1>
 <p style="font-size: 18px; color: #333333;">
