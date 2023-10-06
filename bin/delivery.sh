@@ -60,7 +60,7 @@ echo "The email is: ${EMAIL}"
 # delivery server root
 lfs_root="/srv/data"
 
-size=$(du -sh "${DIRECTORY}" | cut -f1)
+size=$(du -shL "${DIRECTORY}" | cut -f1)
 # Set lfs603 ${PROJECT_ID} and target folders
 lfs_project_dir="${lfs_root}/${PROJECT_ID}" 
 # generate a password
