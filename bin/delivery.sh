@@ -60,7 +60,7 @@ echo "The email is: ${EMAIL}"
 # delivery server root
 lfs_root="/srv/data"
 
-size=$(du -sh "${DIRECTORY}" | cut -f1)
+size=$(du -shL "${DIRECTORY}" | cut -f1)
 # Set lfs603 ${PROJECT_ID} and target folders
 lfs_project_dir="${lfs_root}/${PROJECT_ID}" 
 # generate a password
@@ -118,7 +118,7 @@ mutt -s "CTG delivery - project ${PROJECT_ID}" ${EMAIL} \
     Example scp command:<br>
     <span style="background-color: lightgrey">scp -P 22022 -r ${PROJECT_ID}@lfs603.srv.lu.se:/srv/data/${PROJECT_ID} . </span>
 </p>
-<p style="font-size: 16px; color: #333333;">Find attached <b>ctg-delivery-guide-v1.1.pdf</b> for download instructions!</p>
+<p style="font-size: 16px; color: #333333;">Find attached pdf for download instructions!</p>
 <p style="font-size: 16px; color: #333333;">Please do not hesitate to contact us if you have any questions or issues.</p>
 <p style="font-size: 16px; color: #333333;">
     Best regards,<br>
