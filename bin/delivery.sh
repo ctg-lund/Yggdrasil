@@ -83,7 +83,7 @@ rsync -rvL --rsync-path="sudo rsync" --progress --human-readable --no-perms "${D
 # post transfer commands
 ssh -T "${LFS_USER}@lfs603.srv.lu.se" << _remote_cmds
 # create project directory
-sudo chown -R ${PROJECT_ID}:${LFS_USER} $lfs_project_dir
+sudo chown -R ${PROJECT_ID}:staff $lfs_project_dir
 mutt -s "CTG delivery - project ${PROJECT_ID}" ${EMAIL} \
 	-e 'unmy_hdr from; my_hdr From: CTG data delivery <${EMAIL}>' \
 	-e 'set content_type=text/html' \
