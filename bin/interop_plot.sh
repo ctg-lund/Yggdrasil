@@ -44,18 +44,25 @@ singularity_cmd='singularity exec --bind /projects/fs1/ /projects/fs1/shared/ctg
 echo_debug " ... singularity_cmd  : ${singularity_cmd}"
 echo_debug ""
 echo_debug ""
-
+OUTPUT="/projects/fs1/shared/ctg-qc/ctg-interop/$runfolder_name"
 
 
 ################################################
 ##  == 2 == Run Plot commands
 ################################################
 
+
+
 # Nova: %Occupied vs %PF
 if [[ "${runfolder_name}" == *"_A00"* ]]; then
     echo_debug " ... ok, this is a NovaSeq run! "
     echo_debug " ... generating:  interop_imaging_table "
-    ${singularity_cmd} interop_imaging_table ${runfolder_path} | sed -e 's/;/,/g' |cut -d',' -f10,49 |  awk  -F "," '{ print $2,$1}' OFS="," | sed "s/,\#/\#/g" | grep -v "^," | gnuplot -e "set decimalsign locale 'en_US.utf8'; set title \"${runfolder}\";set datafile separator ',';set key autotitle columnheader;set term png;set output '${runfolder_path}/ctg-interop/occ_pf.${runfolder}_mqc.png'; set xrange [0:100]; set yrange [0:100]; set size square 1,1;set xlabel '% occupied'; set ylabel '% pass filter';set key off;plot '-'"
+    ${singularity_cmd} interop_imaging_table ${runfolder_path} | \
+    sed -e 's/;/,/g' |cut -d',' -f10,49 |  \
+    awk  -F "," '{ print $2,$1}' OFS="," | \
+    sed "s/,\#/\#/g" | \
+    grep -v "^," | \
+    gnuplot -e "set decimalsign locale 'en_US.utf8'; set title \"${runfolder}\";set datafile separator ',';set key autotitle columnheader;set term png;set output '${runfolder_path}/ctg-interop/occ_pf.${runfolder}_mqc.png'; set xrange [0:100]; set yrange [0:100]; set size square 1,1;set xlabel '% occupied'; set ylabel '% pass filter';set key off;plot '-'"
 else
     echo_debug " ... this is not a NovaSeq run! "
     echo_debug " ... ... cannot generate interop_imaging_table "
@@ -63,23 +70,28 @@ fi
 
 # Q-score Heatmap
 echo_debug " ... generating:  interop_imaging_table "
-${singularity_cmd} interop_plot_qscore_heatmap ${runfolder_path} | gnuplot
+
+${singularity_cmd} interop_plot_qscore_heatmap ${runfolder_path} | gnuplot -e "set output $OUTPUT/${runfolder_name}_q-heat-map_mqc.png"
 
 # Q-score-histogram
 echo_debug " ... generating:  interop_imaging_table "
-${singularity_cmd} interop_plot_qscore_histogram ${runfolder_path} | gnuplot
+
+${singularity_cmd} interop_plot_qscore_histogram ${runfolder_path} | gnuplot -e "set output $OUTPUT/${runfolder_name}_q-histogram_mqc.png"
 
 # Flowcell heatmap
 echo_debug " ... generating:  interop_imaging_table "
-${singularity_cmd} interop_plot_flowcell ${runfolder_path} | gnuplot
+
+${singularity_cmd} interop_plot_flowcell ${runfolder_path} | gnuplot -e "set output $OUTPUT/${runfolder_name}_flowcell-Intensity_mqc.png"
 
 # Intensity by cycle
 echo_debug " ... generating:  interop_imaging_table "
-${singularity_cmd} interop_plot_by_cycle ${runfolder_path} | gnuplot 
+
+${singularity_cmd} interop_plot_by_cycle ${runfolder_path} | gnuplot  -e "set output $OUTPUT/${runfolder_name}_Intensity-by-cycle_Intensity_mqc.png"
 
 # plot by lane, density / pf
 echo_debug " ... generating:  interop_imaging_table "
-${singularity_cmd} interop_plot_by_lane ${runfolder_path} | gnuplot 
+
+${singularity_cmd} interop_plot_by_lane ${runfolder_path} | gnuplot -e "set output $OUTPUT/${runfolder_name}_ClusterCount-by-lane_mqc.png"
 
 
 ################################################
@@ -89,11 +101,12 @@ ${singularity_cmd} interop_plot_by_lane ${runfolder_path} | gnuplot
 # change suffix - so it will be multiqc - compatible
 echo_debug " ...  "
 echo_debug " ... making MultiQC compatible"
-for file in ${runfolder_name}*.png; do newn=$(echo ${file} | sed "s/.png/_mqc.png/g"); mv ${file} ${newn}; done
+# using set instead
+#for file in ${runfolder_name}*.png; do newn=$(echo ${file} | sed "s/.png/_mqc.png/g"); mv ${file} ${newn}; done
 
 # move the pngs to runfolders interop folder
 echo_debug " ... moving .png's to ./ctg-interop folder"
-mv ${runfolder_name}*_mqc.png ${runfolder_path}/ctg-interop/
+#mv ${runfolder_name}*_mqc.png ${runfolder_path}/ctg-interop/
 
 
 echo_debug ""
